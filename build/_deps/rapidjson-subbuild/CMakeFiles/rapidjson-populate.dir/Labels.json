@@ -1,0 +1,46 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/home/lehakrechet/institut/proga/text_scrum_board/build/_deps/rapidjson-subbuild/CMakeFiles/rapidjson-populate"
+		},
+		{
+			"file" : "/home/lehakrechet/institut/proga/text_scrum_board/build/_deps/rapidjson-subbuild/CMakeFiles/rapidjson-populate.rule"
+		},
+		{
+			"file" : "/home/lehakrechet/institut/proga/text_scrum_board/build/_deps/rapidjson-subbuild/CMakeFiles/rapidjson-populate-complete.rule"
+		},
+		{
+			"file" : "/home/lehakrechet/institut/proga/text_scrum_board/build/_deps/rapidjson-subbuild/rapidjson-populate-prefix/src/rapidjson-populate-stamp/rapidjson-populate-build.rule"
+		},
+		{
+			"file" : "/home/lehakrechet/institut/proga/text_scrum_board/build/_deps/rapidjson-subbuild/rapidjson-populate-prefix/src/rapidjson-populate-stamp/rapidjson-populate-configure.rule"
+		},
+		{
+			"file" : "/home/lehakrechet/institut/proga/text_scrum_board/build/_deps/rapidjson-subbuild/rapidjson-populate-prefix/src/rapidjson-populate-stamp/rapidjson-populate-download.rule"
+		},
+		{
+			"file" : "/home/lehakrechet/institut/proga/text_scrum_board/build/_deps/rapidjson-subbuild/rapidjson-populate-prefix/src/rapidjson-populate-stamp/rapidjson-populate-install.rule"
+		},
+		{
+			"file" : "/home/lehakrechet/institut/proga/text_scrum_board/build/_deps/rapidjson-subbuild/rapidjson-populate-prefix/src/rapidjson-populate-stamp/rapidjson-populate-mkdir.rule"
+		},
+		{
+			"file" : "/home/lehakrechet/institut/proga/text_scrum_board/build/_deps/rapidjson-subbuild/rapidjson-populate-prefix/src/rapidjson-populate-stamp/rapidjson-populate-patch_disconnected.rule"
+		},
+		{
+			"file" : "/home/lehakrechet/institut/proga/text_scrum_board/build/_deps/rapidjson-subbuild/rapidjson-populate-prefix/src/rapidjson-populate-stamp/rapidjson-populate-test.rule"
+		},
+		{
+			"file" : "/home/lehakrechet/institut/proga/text_scrum_board/build/_deps/rapidjson-subbuild/rapidjson-populate-prefix/src/rapidjson-populate-stamp/rapidjson-populate-update_disconnected.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"rapidjson-populate"
+		],
+		"name" : "rapidjson-populate"
+	}
+}

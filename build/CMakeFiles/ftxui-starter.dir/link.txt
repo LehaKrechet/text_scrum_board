@@ -1,0 +1,1 @@
+/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/ftxui-starter.dir/link.d "CMakeFiles/ftxui-starter.dir/src/main.cpp.o" "CMakeFiles/ftxui-starter.dir/src/task.cpp.o" -o ftxui-starter  _deps/ftxui-build/libftxui-screen.a _deps/ftxui-build/libftxui-dom.a _deps/ftxui-build/libftxui-component.a _deps/ftxui-build/libftxui-dom.a _deps/ftxui-build/libftxui-screen.a

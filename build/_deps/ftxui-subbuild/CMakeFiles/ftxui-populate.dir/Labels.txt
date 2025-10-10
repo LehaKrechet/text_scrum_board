@@ -1,14 +1,14 @@
 # Target labels
  ftxui-populate
 # Source files and their labels
-/home/lehakrechet/institut/proga/text_scrum_board/build/_deps/ftxui-subbuild/CMakeFiles/ftxui-populate
-/home/lehakrechet/institut/proga/text_scrum_board/build/_deps/ftxui-subbuild/CMakeFiles/ftxui-populate.rule
-/home/lehakrechet/institut/proga/text_scrum_board/build/_deps/ftxui-subbuild/CMakeFiles/ftxui-populate-complete.rule
-/home/lehakrechet/institut/proga/text_scrum_board/build/_deps/ftxui-subbuild/ftxui-populate-prefix/src/ftxui-populate-stamp/ftxui-populate-build.rule
-/home/lehakrechet/institut/proga/text_scrum_board/build/_deps/ftxui-subbuild/ftxui-populate-prefix/src/ftxui-populate-stamp/ftxui-populate-configure.rule
-/home/lehakrechet/institut/proga/text_scrum_board/build/_deps/ftxui-subbuild/ftxui-populate-prefix/src/ftxui-populate-stamp/ftxui-populate-download.rule
-/home/lehakrechet/institut/proga/text_scrum_board/build/_deps/ftxui-subbuild/ftxui-populate-prefix/src/ftxui-populate-stamp/ftxui-populate-install.rule
-/home/lehakrechet/institut/proga/text_scrum_board/build/_deps/ftxui-subbuild/ftxui-populate-prefix/src/ftxui-populate-stamp/ftxui-populate-mkdir.rule
-/home/lehakrechet/institut/proga/text_scrum_board/build/_deps/ftxui-subbuild/ftxui-populate-prefix/src/ftxui-populate-stamp/ftxui-populate-patch_disconnected.rule
-/home/lehakrechet/institut/proga/text_scrum_board/build/_deps/ftxui-subbuild/ftxui-populate-prefix/src/ftxui-populate-stamp/ftxui-populate-test.rule
-/home/lehakrechet/institut/proga/text_scrum_board/build/_deps/ftxui-subbuild/ftxui-populate-prefix/src/ftxui-populate-stamp/ftxui-populate-update_disconnected.rule
+/home/krechet/home/institute/proga/text_scrum_board/build/_deps/ftxui-subbuild/CMakeFiles/ftxui-populate
+/home/krechet/home/institute/proga/text_scrum_board/build/_deps/ftxui-subbuild/CMakeFiles/ftxui-populate.rule
+/home/krechet/home/institute/proga/text_scrum_board/build/_deps/ftxui-subbuild/CMakeFiles/ftxui-populate-complete.rule
+/home/krechet/home/institute/proga/text_scrum_board/build/_deps/ftxui-subbuild/ftxui-populate-prefix/src/ftxui-populate-stamp/ftxui-populate-build.rule
+/home/krechet/home/institute/proga/text_scrum_board/build/_deps/ftxui-subbuild/ftxui-populate-prefix/src/ftxui-populate-stamp/ftxui-populate-configure.rule
+/home/krechet/home/institute/proga/text_scrum_board/build/_deps/ftxui-subbuild/ftxui-populate-prefix/src/ftxui-populate-stamp/ftxui-populate-download.rule
+/home/krechet/home/institute/proga/text_scrum_board/build/_deps/ftxui-subbuild/ftxui-populate-prefix/src/ftxui-populate-stamp/ftxui-populate-install.rule
+/home/krechet/home/institute/proga/text_scrum_board/build/_deps/ftxui-subbuild/ftxui-populate-prefix/src/ftxui-populate-stamp/ftxui-populate-mkdir.rule
+/home/krechet/home/institute/proga/text_scrum_board/build/_deps/ftxui-subbuild/ftxui-populate-prefix/src/ftxui-populate-stamp/ftxui-populate-patch_disconnected.rule
+/home/krechet/home/institute/proga/text_scrum_board/build/_deps/ftxui-subbuild/ftxui-populate-prefix/src/ftxui-populate-stamp/ftxui-populate-test.rule
+/home/krechet/home/institute/proga/text_scrum_board/build/_deps/ftxui-subbuild/ftxui-populate-prefix/src/ftxui-populate-stamp/ftxui-populate-update_disconnected.rule

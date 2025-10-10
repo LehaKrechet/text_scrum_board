@@ -1,9 +1,9 @@
 _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/animation.cpp.o: \
- /home/lehakrechet/institut/proga/text_scrum_board/build/_deps/ftxui-src/src/ftxui/component/animation.cpp \
- /usr/include/stdc-predef.h /usr/include/c++/14/cmath \
- /usr/include/c++/14/bits/requires_hosted.h \
- /usr/include/x86_64-linux-gnu/c++/14/bits/c++config.h \
- /usr/include/x86_64-linux-gnu/c++/14/bits/os_defines.h \
+ /home/krechet/home/institute/proga/text_scrum_board/build/_deps/ftxui-src/src/ftxui/component/animation.cpp \
+ /usr/include/stdc-predef.h /usr/include/c++/13/cmath \
+ /usr/include/c++/13/bits/requires_hosted.h \
+ /usr/include/x86_64-linux-gnu/c++/13/bits/c++config.h \
+ /usr/include/x86_64-linux-gnu/c++/13/bits/os_defines.h \
  /usr/include/features.h /usr/include/features-time64.h \
  /usr/include/x86_64-linux-gnu/bits/wordsize.h \
  /usr/include/x86_64-linux-gnu/bits/timesize.h \
@@ -11,11 +11,10 @@ _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/animation.cpp.o: 
  /usr/include/x86_64-linux-gnu/bits/long-double.h \
  /usr/include/x86_64-linux-gnu/gnu/stubs.h \
  /usr/include/x86_64-linux-gnu/gnu/stubs-64.h \
- /usr/include/x86_64-linux-gnu/c++/14/bits/cpu_defines.h \
- /usr/include/c++/14/pstl/pstl_config.h \
- /usr/include/c++/14/bits/cpp_type_traits.h \
- /usr/include/c++/14/bits/version.h /usr/include/c++/14/ext/type_traits.h \
- /usr/include/math.h \
+ /usr/include/x86_64-linux-gnu/c++/13/bits/cpu_defines.h \
+ /usr/include/c++/13/pstl/pstl_config.h \
+ /usr/include/c++/13/bits/cpp_type_traits.h \
+ /usr/include/c++/13/ext/type_traits.h /usr/include/math.h \
  /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
  /usr/include/x86_64-linux-gnu/bits/types.h \
  /usr/include/x86_64-linux-gnu/bits/typesizes.h \
@@ -27,13 +26,12 @@ _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/animation.cpp.o: 
  /usr/include/x86_64-linux-gnu/bits/flt-eval-method.h \
  /usr/include/x86_64-linux-gnu/bits/fp-logb.h \
  /usr/include/x86_64-linux-gnu/bits/fp-fast.h \
- /usr/include/x86_64-linux-gnu/bits/mathcalls-macros.h \
  /usr/include/x86_64-linux-gnu/bits/mathcalls-helper-functions.h \
  /usr/include/x86_64-linux-gnu/bits/mathcalls.h \
  /usr/include/x86_64-linux-gnu/bits/mathcalls-narrow.h \
  /usr/include/x86_64-linux-gnu/bits/iscanonical.h \
- /usr/include/c++/14/bits/std_abs.h /usr/include/stdlib.h \
- /usr/lib/gcc/x86_64-linux-gnu/14/include/stddef.h \
+ /usr/include/c++/13/bits/std_abs.h /usr/include/stdlib.h \
+ /usr/lib/gcc/x86_64-linux-gnu/13/include/stddef.h \
  /usr/include/x86_64-linux-gnu/bits/waitflags.h \
  /usr/include/x86_64-linux-gnu/bits/waitstatus.h \
  /usr/include/x86_64-linux-gnu/bits/types/locale_t.h \
@@ -61,76 +59,79 @@ _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/animation.cpp.o: 
  /usr/include/x86_64-linux-gnu/bits/struct_mutex.h \
  /usr/include/x86_64-linux-gnu/bits/struct_rwlock.h /usr/include/alloca.h \
  /usr/include/x86_64-linux-gnu/bits/stdlib-float.h \
- /usr/include/c++/14/bits/specfun.h \
- /usr/include/c++/14/bits/stl_algobase.h \
- /usr/include/c++/14/bits/functexcept.h \
- /usr/include/c++/14/bits/exception_defines.h \
- /usr/include/c++/14/ext/numeric_traits.h \
- /usr/include/c++/14/bits/stl_pair.h /usr/include/c++/14/type_traits \
- /usr/include/c++/14/bits/move.h /usr/include/c++/14/bits/utility.h \
- /usr/include/c++/14/bits/stl_iterator_base_types.h \
- /usr/include/c++/14/bits/stl_iterator_base_funcs.h \
- /usr/include/c++/14/bits/concept_check.h \
- /usr/include/c++/14/debug/assertions.h \
- /usr/include/c++/14/bits/stl_iterator.h \
- /usr/include/c++/14/bits/ptr_traits.h /usr/include/c++/14/debug/debug.h \
- /usr/include/c++/14/bits/predefined_ops.h /usr/include/c++/14/bit \
- /usr/include/c++/14/concepts /usr/include/c++/14/limits \
- /usr/include/c++/14/tr1/gamma.tcc \
- /usr/include/c++/14/tr1/special_function_util.h \
- /usr/include/c++/14/tr1/bessel_function.tcc \
- /usr/include/c++/14/tr1/beta_function.tcc \
- /usr/include/c++/14/tr1/ell_integral.tcc \
- /usr/include/c++/14/tr1/exp_integral.tcc \
- /usr/include/c++/14/tr1/hypergeometric.tcc \
- /usr/include/c++/14/tr1/legendre_function.tcc \
- /usr/include/c++/14/tr1/modified_bessel_func.tcc \
- /usr/include/c++/14/tr1/poly_hermite.tcc \
- /usr/include/c++/14/tr1/poly_laguerre.tcc \
- /usr/include/c++/14/tr1/riemann_zeta.tcc /usr/include/c++/14/utility \
- /usr/include/c++/14/bits/stl_relops.h \
- /usr/include/c++/14/initializer_list \
- /home/lehakrechet/institut/proga/text_scrum_board/build/_deps/ftxui-src/include/ftxui/component/animation.hpp \
- /usr/include/c++/14/chrono /usr/include/c++/14/bits/chrono.h \
- /usr/include/c++/14/ratio /usr/include/c++/14/cstdint \
- /usr/lib/gcc/x86_64-linux-gnu/14/include/stdint.h /usr/include/stdint.h \
+ /usr/include/c++/13/bits/specfun.h \
+ /usr/include/c++/13/bits/stl_algobase.h \
+ /usr/include/c++/13/bits/functexcept.h \
+ /usr/include/c++/13/bits/exception_defines.h \
+ /usr/include/c++/13/ext/numeric_traits.h \
+ /usr/include/c++/13/bits/stl_pair.h /usr/include/c++/13/type_traits \
+ /usr/include/c++/13/bits/move.h /usr/include/c++/13/bits/utility.h \
+ /usr/include/c++/13/bits/stl_iterator_base_types.h \
+ /usr/include/c++/13/bits/stl_iterator_base_funcs.h \
+ /usr/include/c++/13/bits/concept_check.h \
+ /usr/include/c++/13/debug/assertions.h \
+ /usr/include/c++/13/bits/stl_iterator.h \
+ /usr/include/c++/13/bits/ptr_traits.h /usr/include/c++/13/debug/debug.h \
+ /usr/include/c++/13/bits/predefined_ops.h /usr/include/c++/13/bit \
+ /usr/include/c++/13/limits /usr/include/c++/13/tr1/gamma.tcc \
+ /usr/include/c++/13/tr1/special_function_util.h \
+ /usr/include/c++/13/tr1/bessel_function.tcc \
+ /usr/include/c++/13/tr1/beta_function.tcc \
+ /usr/include/c++/13/tr1/ell_integral.tcc \
+ /usr/include/c++/13/tr1/exp_integral.tcc \
+ /usr/include/c++/13/tr1/hypergeometric.tcc \
+ /usr/include/c++/13/tr1/legendre_function.tcc \
+ /usr/include/c++/13/tr1/modified_bessel_func.tcc \
+ /usr/include/c++/13/tr1/poly_hermite.tcc \
+ /usr/include/c++/13/tr1/poly_laguerre.tcc \
+ /usr/include/c++/13/tr1/riemann_zeta.tcc /usr/include/c++/13/utility \
+ /usr/include/c++/13/bits/stl_relops.h \
+ /usr/include/c++/13/initializer_list \
+ /home/krechet/home/institute/proga/text_scrum_board/build/_deps/ftxui-src/include/ftxui/component/animation.hpp \
+ /usr/include/c++/13/chrono /usr/include/c++/13/bits/chrono.h \
+ /usr/include/c++/13/ratio /usr/include/c++/13/cstdint \
+ /usr/lib/gcc/x86_64-linux-gnu/13/include/stdint.h /usr/include/stdint.h \
  /usr/include/x86_64-linux-gnu/bits/wchar.h \
  /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h \
  /usr/include/x86_64-linux-gnu/bits/stdint-least.h \
- /usr/include/c++/14/ctime /usr/include/time.h \
+ /usr/include/c++/13/ctime /usr/include/time.h \
  /usr/include/x86_64-linux-gnu/bits/time.h \
  /usr/include/x86_64-linux-gnu/bits/timex.h \
  /usr/include/x86_64-linux-gnu/bits/types/struct_tm.h \
  /usr/include/x86_64-linux-gnu/bits/types/struct_itimerspec.h \
- /usr/include/c++/14/bits/parse_numbers.h /usr/include/c++/14/functional \
- /usr/include/c++/14/bits/stl_function.h \
- /usr/include/c++/14/backward/binders.h /usr/include/c++/14/tuple \
- /usr/include/c++/14/bits/uses_allocator.h \
- /usr/include/c++/14/bits/invoke.h \
- /usr/include/c++/14/bits/functional_hash.h \
- /usr/include/c++/14/bits/hash_bytes.h /usr/include/c++/14/bits/refwrap.h \
- /usr/include/c++/14/bits/std_function.h /usr/include/c++/14/new \
- /usr/include/c++/14/bits/exception.h /usr/include/c++/14/typeinfo \
- /usr/include/c++/14/unordered_map \
- /usr/include/c++/14/bits/unordered_map.h \
- /usr/include/c++/14/bits/hashtable.h \
- /usr/include/c++/14/bits/hashtable_policy.h \
- /usr/include/c++/14/ext/aligned_buffer.h \
- /usr/include/c++/14/ext/alloc_traits.h \
- /usr/include/c++/14/bits/alloc_traits.h \
- /usr/include/c++/14/bits/stl_construct.h \
- /usr/include/c++/14/bits/memoryfwd.h \
- /usr/include/c++/14/bits/allocator.h \
- /usr/include/x86_64-linux-gnu/c++/14/bits/c++allocator.h \
- /usr/include/c++/14/bits/new_allocator.h \
- /usr/include/c++/14/bits/enable_special_members.h \
- /usr/include/c++/14/bits/node_handle.h \
- /usr/include/c++/14/bits/range_access.h \
- /usr/include/c++/14/bits/erase_if.h \
- /usr/include/c++/14/bits/memory_resource.h /usr/include/c++/14/cstddef \
- /usr/include/c++/14/bits/uses_allocator_args.h \
- /usr/include/c++/14/vector /usr/include/c++/14/bits/stl_uninitialized.h \
- /usr/include/c++/14/bits/stl_vector.h \
- /usr/include/c++/14/bits/stl_bvector.h \
- /usr/include/c++/14/bits/vector.tcc /usr/include/c++/14/array \
- /usr/include/c++/14/compare
+ /usr/include/c++/13/bits/parse_numbers.h /usr/include/c++/13/functional \
+ /usr/include/c++/13/bits/stl_function.h \
+ /usr/include/c++/13/backward/binders.h /usr/include/c++/13/tuple \
+ /usr/include/c++/13/bits/uses_allocator.h \
+ /usr/include/c++/13/bits/invoke.h \
+ /usr/include/c++/13/bits/functional_hash.h \
+ /usr/include/c++/13/bits/hash_bytes.h /usr/include/c++/13/bits/refwrap.h \
+ /usr/include/c++/13/bits/std_function.h /usr/include/c++/13/new \
+ /usr/include/c++/13/bits/exception.h /usr/include/c++/13/typeinfo \
+ /usr/include/c++/13/unordered_map \
+ /usr/include/c++/13/bits/unordered_map.h \
+ /usr/include/c++/13/bits/hashtable.h \
+ /usr/include/c++/13/bits/hashtable_policy.h \
+ /usr/include/c++/13/ext/aligned_buffer.h \
+ /usr/include/c++/13/ext/alloc_traits.h \
+ /usr/include/c++/13/bits/alloc_traits.h \
+ /usr/include/c++/13/bits/stl_construct.h \
+ /usr/include/c++/13/bits/memoryfwd.h \
+ /usr/include/c++/13/bits/allocator.h \
+ /usr/include/x86_64-linux-gnu/c++/13/bits/c++allocator.h \
+ /usr/include/c++/13/bits/new_allocator.h \
+ /usr/include/c++/13/bits/enable_special_members.h \
+ /usr/include/c++/13/bits/node_handle.h \
+ /usr/include/c++/13/bits/range_access.h \
+ /usr/include/c++/13/bits/erase_if.h \
+ /usr/include/c++/13/bits/memory_resource.h /usr/include/c++/13/cstddef \
+ /usr/include/c++/13/bits/uses_allocator_args.h \
+ /usr/include/c++/13/vector /usr/include/c++/13/bits/stl_uninitialized.h \
+ /usr/include/c++/13/bits/stl_vector.h \
+ /usr/include/c++/13/bits/stl_bvector.h \
+ /usr/include/c++/13/bits/vector.tcc /usr/include/c++/13/array \
+ /usr/include/c++/13/compare /usr/include/c++/13/bits/stl_algo.h \
+ /usr/include/c++/13/bits/algorithmfwd.h \
+ /usr/include/c++/13/bits/stl_heap.h \
+ /usr/include/c++/13/bits/uniform_int_dist.h \
+ /usr/include/c++/13/bits/stl_tempbuf.h /usr/include/c++/13/cstdlib

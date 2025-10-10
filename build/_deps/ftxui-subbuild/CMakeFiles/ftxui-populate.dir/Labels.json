@@ -2,37 +2,37 @@
 	"sources" : 
 	[
 		{
-			"file" : "/home/lehakrechet/institut/proga/text_scrum_board/build/_deps/ftxui-subbuild/CMakeFiles/ftxui-populate"
+			"file" : "/home/krechet/home/institute/proga/text_scrum_board/build/_deps/ftxui-subbuild/CMakeFiles/ftxui-populate"
 		},
 		{
-			"file" : "/home/lehakrechet/institut/proga/text_scrum_board/build/_deps/ftxui-subbuild/CMakeFiles/ftxui-populate.rule"
+			"file" : "/home/krechet/home/institute/proga/text_scrum_board/build/_deps/ftxui-subbuild/CMakeFiles/ftxui-populate.rule"
 		},
 		{
-			"file" : "/home/lehakrechet/institut/proga/text_scrum_board/build/_deps/ftxui-subbuild/CMakeFiles/ftxui-populate-complete.rule"
+			"file" : "/home/krechet/home/institute/proga/text_scrum_board/build/_deps/ftxui-subbuild/CMakeFiles/ftxui-populate-complete.rule"
 		},
 		{
-			"file" : "/home/lehakrechet/institut/proga/text_scrum_board/build/_deps/ftxui-subbuild/ftxui-populate-prefix/src/ftxui-populate-stamp/ftxui-populate-build.rule"
+			"file" : "/home/krechet/home/institute/proga/text_scrum_board/build/_deps/ftxui-subbuild/ftxui-populate-prefix/src/ftxui-populate-stamp/ftxui-populate-build.rule"
 		},
 		{
-			"file" : "/home/lehakrechet/institut/proga/text_scrum_board/build/_deps/ftxui-subbuild/ftxui-populate-prefix/src/ftxui-populate-stamp/ftxui-populate-configure.rule"
+			"file" : "/home/krechet/home/institute/proga/text_scrum_board/build/_deps/ftxui-subbuild/ftxui-populate-prefix/src/ftxui-populate-stamp/ftxui-populate-configure.rule"
 		},
 		{
-			"file" : "/home/lehakrechet/institut/proga/text_scrum_board/build/_deps/ftxui-subbuild/ftxui-populate-prefix/src/ftxui-populate-stamp/ftxui-populate-download.rule"
+			"file" : "/home/krechet/home/institute/proga/text_scrum_board/build/_deps/ftxui-subbuild/ftxui-populate-prefix/src/ftxui-populate-stamp/ftxui-populate-download.rule"
 		},
 		{
-			"file" : "/home/lehakrechet/institut/proga/text_scrum_board/build/_deps/ftxui-subbuild/ftxui-populate-prefix/src/ftxui-populate-stamp/ftxui-populate-install.rule"
+			"file" : "/home/krechet/home/institute/proga/text_scrum_board/build/_deps/ftxui-subbuild/ftxui-populate-prefix/src/ftxui-populate-stamp/ftxui-populate-install.rule"
 		},
 		{
-			"file" : "/home/lehakrechet/institut/proga/text_scrum_board/build/_deps/ftxui-subbuild/ftxui-populate-prefix/src/ftxui-populate-stamp/ftxui-populate-mkdir.rule"
+			"file" : "/home/krechet/home/institute/proga/text_scrum_board/build/_deps/ftxui-subbuild/ftxui-populate-prefix/src/ftxui-populate-stamp/ftxui-populate-mkdir.rule"
 		},
 		{
-			"file" : "/home/lehakrechet/institut/proga/text_scrum_board/build/_deps/ftxui-subbuild/ftxui-populate-prefix/src/ftxui-populate-stamp/ftxui-populate-patch_disconnected.rule"
+			"file" : "/home/krechet/home/institute/proga/text_scrum_board/build/_deps/ftxui-subbuild/ftxui-populate-prefix/src/ftxui-populate-stamp/ftxui-populate-patch_disconnected.rule"
 		},
 		{
-			"file" : "/home/lehakrechet/institut/proga/text_scrum_board/build/_deps/ftxui-subbuild/ftxui-populate-prefix/src/ftxui-populate-stamp/ftxui-populate-test.rule"
+			"file" : "/home/krechet/home/institute/proga/text_scrum_board/build/_deps/ftxui-subbuild/ftxui-populate-prefix/src/ftxui-populate-stamp/ftxui-populate-test.rule"
 		},
 		{
-			"file" : "/home/lehakrechet/institut/proga/text_scrum_board/build/_deps/ftxui-subbuild/ftxui-populate-prefix/src/ftxui-populate-stamp/ftxui-populate-update_disconnected.rule"
+			"file" : "/home/krechet/home/institute/proga/text_scrum_board/build/_deps/ftxui-subbuild/ftxui-populate-prefix/src/ftxui-populate-stamp/ftxui-populate-update_disconnected.rule"
 		}
 	],
 	"target" : 

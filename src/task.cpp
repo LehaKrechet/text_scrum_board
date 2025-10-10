@@ -33,3 +33,23 @@ std::string Task::generate_id(){
     return new_id;
 
 }
+
+bool Task::operator==(const Task& other) const {
+    return title == other.title && description == other.description && id == other.id;
+}
+
+void Task::set_description(std::string descript){
+    this->description = descript;
+}
+std::string Task::get_description(){
+    return this->description;
+}
+std::string Task::get_id(){
+    return this->id;
+}
+std::string Task::get_title(){
+    return this->title;
+}
+void Task::set_title(std::string titl){
+    this->title = titl;
+}

@@ -31,15 +31,15 @@ project(ftxui-starter
   VERSION 1.0.0
 )
  
-add_executable(ftxui-starter src/main.cpp src/task.cpp)
-target_include_directories(ftxui-starter PRIVATE include)
+add_executable(text_scrum_board src/main.cpp src/task.cpp src/column.cpp)
+target_include_directories(text_scrum_board PRIVATE include)
  
-target_link_libraries(ftxui-starter
+target_link_libraries(text_scrum_board
   PRIVATE ftxui::screen
   PRIVATE ftxui::dom
   PRIVATE ftxui::component # Not needed for this example.
 )
 # RapidJSON
-target_include_directories(ftxui-starter PRIVATE 
+target_include_directories(text_scrum_board PRIVATE 
     ${rapidjson_SOURCE_DIR}/include
 )

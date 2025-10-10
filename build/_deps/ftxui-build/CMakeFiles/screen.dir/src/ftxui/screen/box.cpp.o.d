@@ -1,10 +1,10 @@
 _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/box.cpp.o: \
- /home/lehakrechet/institut/proga/text_scrum_board/build/_deps/ftxui-src/src/ftxui/screen/box.cpp \
+ /home/krechet/home/institute/proga/text_scrum_board/build/_deps/ftxui-src/src/ftxui/screen/box.cpp \
  /usr/include/stdc-predef.h \
- /home/lehakrechet/institut/proga/text_scrum_board/build/_deps/ftxui-src/include/ftxui/screen/box.hpp \
- /usr/include/c++/14/algorithm /usr/include/c++/14/bits/stl_algobase.h \
- /usr/include/x86_64-linux-gnu/c++/14/bits/c++config.h \
- /usr/include/x86_64-linux-gnu/c++/14/bits/os_defines.h \
+ /home/krechet/home/institute/proga/text_scrum_board/build/_deps/ftxui-src/include/ftxui/screen/box.hpp \
+ /usr/include/c++/13/algorithm /usr/include/c++/13/bits/stl_algobase.h \
+ /usr/include/x86_64-linux-gnu/c++/13/bits/c++config.h \
+ /usr/include/x86_64-linux-gnu/c++/13/bits/os_defines.h \
  /usr/include/features.h /usr/include/features-time64.h \
  /usr/include/x86_64-linux-gnu/bits/wordsize.h \
  /usr/include/x86_64-linux-gnu/bits/timesize.h \
@@ -12,32 +12,32 @@ _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/box.cpp.o: \
  /usr/include/x86_64-linux-gnu/bits/long-double.h \
  /usr/include/x86_64-linux-gnu/gnu/stubs.h \
  /usr/include/x86_64-linux-gnu/gnu/stubs-64.h \
- /usr/include/x86_64-linux-gnu/c++/14/bits/cpu_defines.h \
- /usr/include/c++/14/pstl/pstl_config.h \
- /usr/include/c++/14/bits/functexcept.h \
- /usr/include/c++/14/bits/exception_defines.h \
- /usr/include/c++/14/bits/cpp_type_traits.h \
- /usr/include/c++/14/bits/version.h /usr/include/c++/14/ext/type_traits.h \
- /usr/include/c++/14/ext/numeric_traits.h \
- /usr/include/c++/14/bits/stl_pair.h /usr/include/c++/14/type_traits \
- /usr/include/c++/14/bits/move.h /usr/include/c++/14/bits/utility.h \
- /usr/include/c++/14/bits/stl_iterator_base_types.h \
- /usr/include/c++/14/bits/stl_iterator_base_funcs.h \
- /usr/include/c++/14/bits/concept_check.h \
- /usr/include/c++/14/debug/assertions.h \
- /usr/include/c++/14/bits/stl_iterator.h \
- /usr/include/c++/14/bits/ptr_traits.h /usr/include/c++/14/debug/debug.h \
- /usr/include/c++/14/bits/predefined_ops.h /usr/include/c++/14/bit \
- /usr/include/c++/14/concepts /usr/include/c++/14/bits/stl_algo.h \
- /usr/include/c++/14/bits/algorithmfwd.h \
- /usr/include/c++/14/initializer_list /usr/include/c++/14/bits/stl_heap.h \
- /usr/include/c++/14/bits/uniform_int_dist.h \
- /usr/include/c++/14/bits/stl_tempbuf.h /usr/include/c++/14/new \
- /usr/include/c++/14/bits/exception.h \
- /usr/include/c++/14/bits/stl_construct.h /usr/include/c++/14/cstdlib \
+ /usr/include/x86_64-linux-gnu/c++/13/bits/cpu_defines.h \
+ /usr/include/c++/13/pstl/pstl_config.h \
+ /usr/include/c++/13/bits/functexcept.h \
+ /usr/include/c++/13/bits/exception_defines.h \
+ /usr/include/c++/13/bits/cpp_type_traits.h \
+ /usr/include/c++/13/ext/type_traits.h \
+ /usr/include/c++/13/ext/numeric_traits.h \
+ /usr/include/c++/13/bits/stl_pair.h /usr/include/c++/13/type_traits \
+ /usr/include/c++/13/bits/move.h /usr/include/c++/13/bits/utility.h \
+ /usr/include/c++/13/bits/stl_iterator_base_types.h \
+ /usr/include/c++/13/bits/stl_iterator_base_funcs.h \
+ /usr/include/c++/13/bits/concept_check.h \
+ /usr/include/c++/13/debug/assertions.h \
+ /usr/include/c++/13/bits/stl_iterator.h \
+ /usr/include/c++/13/bits/ptr_traits.h /usr/include/c++/13/debug/debug.h \
+ /usr/include/c++/13/bits/predefined_ops.h /usr/include/c++/13/bit \
+ /usr/include/c++/13/bits/stl_algo.h \
+ /usr/include/c++/13/bits/algorithmfwd.h \
+ /usr/include/c++/13/initializer_list /usr/include/c++/13/bits/stl_heap.h \
+ /usr/include/c++/13/bits/uniform_int_dist.h \
+ /usr/include/c++/13/bits/stl_tempbuf.h /usr/include/c++/13/new \
+ /usr/include/c++/13/bits/exception.h \
+ /usr/include/c++/13/bits/stl_construct.h /usr/include/c++/13/cstdlib \
  /usr/include/stdlib.h \
  /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
- /usr/lib/gcc/x86_64-linux-gnu/14/include/stddef.h \
+ /usr/lib/gcc/x86_64-linux-gnu/13/include/stddef.h \
  /usr/include/x86_64-linux-gnu/bits/waitflags.h \
  /usr/include/x86_64-linux-gnu/bits/waitstatus.h \
  /usr/include/x86_64-linux-gnu/bits/floatn.h \
@@ -70,6 +70,6 @@ _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/box.cpp.o: \
  /usr/include/x86_64-linux-gnu/bits/struct_mutex.h \
  /usr/include/x86_64-linux-gnu/bits/struct_rwlock.h /usr/include/alloca.h \
  /usr/include/x86_64-linux-gnu/bits/stdlib-float.h \
- /usr/include/c++/14/bits/std_abs.h \
- /usr/include/c++/14/pstl/glue_algorithm_defs.h \
- /usr/include/c++/14/pstl/execution_defs.h
+ /usr/include/c++/13/bits/std_abs.h \
+ /usr/include/c++/13/pstl/glue_algorithm_defs.h \
+ /usr/include/c++/13/pstl/execution_defs.h

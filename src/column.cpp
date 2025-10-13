@@ -14,7 +14,20 @@ void Column::delete_task(Task &task){
     }
 }
 
-void move_task(Column &start, Column &end, Task &task){
-    end.add_task(task);
-    start.delete_task(task);
+void move_task(Column *start, Column *end, Task &task){
+    end->add_task(task);
+    start->delete_task(task);
+}
+
+std::vector<Task>& Column::get_tasks(){
+    return tasks;
+}
+const std::vector<Task>& Column::get_tasks() const {
+        return tasks;
+    }
+std::string Column::get_name(){
+    return name;
+}
+void Column::set_name(std::string n){
+    name = n;
 }

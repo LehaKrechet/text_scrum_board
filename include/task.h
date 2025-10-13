@@ -27,10 +27,14 @@ class Task{
             priority = other.priority;
         }
         std::string generate_id();
-        bool operator==(const Task& other) const;
+        bool operator==(const Task& other) const{
+            return title == other.title && description == other.description && id == other.id;
+        }
         void set_description(std::string descript);
         std::string get_description();
         std::string get_id();
         std::string get_title();
         void set_title(std::string titl);
+        int get_prioriy();
+        void set_priority(int p);
 };

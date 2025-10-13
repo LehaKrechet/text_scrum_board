@@ -34,9 +34,6 @@ std::string Task::generate_id(){
 
 }
 
-bool Task::operator==(const Task& other) const {
-    return title == other.title && description == other.description && id == other.id;
-}
 
 void Task::set_description(std::string descript){
     this->description = descript;
@@ -53,3 +50,11 @@ std::string Task::get_title(){
 void Task::set_title(std::string titl){
     this->title = titl;
 }
+
+int Task::get_prioriy(){
+    return priority;
+}
+void Task::set_priority(int p){
+    priority = p;
+}
+

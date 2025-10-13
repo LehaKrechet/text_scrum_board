@@ -1,5 +1,5 @@
 #include <task.h>
-// #include <board.h>
+#include <board.h>
 #include <column.h>
 // #include <ftxui.h>
 // #include <scrum_board.h>
@@ -7,21 +7,42 @@
 
 
 int main(){
+  Board board("Number_1");
   Task task("Task1"), task1("Task2");
 
 
-  Column To_do;
-  Column In_progress;
-  In_progress.name = "In progress";
-  To_do.name = "TO DO";
+  Column* To_do = new Column("TO_DO");
+  Column* In_progress = new Column("In_progress");
+
+  Task task2("Task3");
 
   task.set_description("Hello world");
 
-  std::cout << task.get_description() << std::endl;
-  std::cout << task.get_id()<< std::endl;
-  std::cout << task.get_title()<< std::endl;
+  In_progress->add_task(task1);
 
-  task.set_title("Hello");
-  std::cout << task.get_title()<< std::endl;
+  board.add_column(To_do);
+  board.add_column(In_progress);
+
+  To_do->add_task(task);
+  move_task(To_do, In_progress, task);
+  move_task(In_progress, To_do, task1);
+  In_progress->add_task(task2);
+  
+
+  for (Task &element : To_do->get_tasks()){
+    std::cout << element.get_title() << " ";
+  }
+
+  std::cout << std::endl;
+  for (Column *element : board.get_columns()){
+    std::cout << element->get_name() << " ";
+    for (Task &elem : element->get_tasks()){
+      std::cout << elem.get_title() << " ";
+    }
+  }
+
+  delete To_do;
+  delete In_progress;
+
 
 }

@@ -26,12 +26,12 @@ if(NOT rapidjson_POPULATED)
 endif()
 # ------------------------------------------------------------------------------
  
-project(ftxui-starter
+project(text_scrum_board
   LANGUAGES CXX
   VERSION 1.0.0
 )
  
-add_executable(text_scrum_board src/main.cpp src/task.cpp src/column.cpp)
+add_executable(text_scrum_board src/main.cpp src/task.cpp src/column.cpp src/board.cpp)
 target_include_directories(text_scrum_board PRIVATE include)
  
 target_link_libraries(text_scrum_board

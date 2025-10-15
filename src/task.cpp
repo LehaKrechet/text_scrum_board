@@ -36,19 +36,19 @@ std::string Task::generate_id(){
 
 
 void Task::set_description(std::string descript){
-    this->description = descript;
+    description = descript;
 }
 std::string Task::get_description(){
-    return this->description;
+    return description;
 }
 std::string Task::get_id(){
-    return this->id;
+    return id;
 }
 std::string Task::get_title(){
-    return this->title;
+    return title;
 }
 void Task::set_title(std::string titl){
-    this->title = titl;
+    title = titl;
 }
 
 int Task::get_prioriy(){

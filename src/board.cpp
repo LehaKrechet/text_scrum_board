@@ -15,9 +15,6 @@ std::vector<Column*>& Board::get_columns() {
     return columns;
 }
 
-// const std::vector<Column>& Board::get_columns() const {
-//     return columns;
-// }
 void Board::add_column(Column* col){
     columns.push_back(col);
 }
@@ -25,4 +22,15 @@ void Board::add_column(Column* col){
 void Board::delete_column(Column* col){
     auto it = std::find(columns.begin(), columns.end(), col);
     columns.erase(it);
+}
+
+void Board::add_developer(Developer* develop){
+    developers.push_back(develop);
+}
+void Board::delete_developer(Developer* develop){
+    auto it = std::find(developers.begin(), developers.end(), develop);
+    developers.erase(it);
+}
+std::vector<Developer*>& Board::get_developer(){
+    return developers;
 }

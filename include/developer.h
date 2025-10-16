@@ -4,8 +4,12 @@
 #include <vector>
 #include <task.h>
 
-class Task{
+class Developer{
     std::string name;
-    std::string description;
-    std::vector<Task> tasks;
+    public:
+        Developer (std::string n){
+            name = n;
+        }
+        std::string get_name();
+        void set_name(std::string n);
 };

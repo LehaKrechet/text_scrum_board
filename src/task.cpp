@@ -3,6 +3,7 @@
 #include <iostream>
 #include <random>
 #include <algorithm>
+#include <json_worker.h>
 
 std::vector<std::string> ids = {}; //Из json файла 
 
@@ -29,7 +30,6 @@ std::string Task::generate_id(){
             flag = false;
         }
     }
-
     return new_id;
 
 }
@@ -56,5 +56,11 @@ int Task::get_prioriy(){
 }
 void Task::set_priority(int p){
     priority = p;
+}
+void Task::set_developer(Developer *develop){
+    developer = develop;
+}
+Developer* Task::get_developer(){
+    return developer;
 }
 

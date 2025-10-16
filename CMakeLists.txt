@@ -31,7 +31,7 @@ project(text_scrum_board
   VERSION 1.0.0
 )
  
-add_executable(text_scrum_board src/main.cpp src/task.cpp src/column.cpp src/board.cpp)
+add_executable(text_scrum_board src/main.cpp src/task.cpp src/column.cpp src/board.cpp src/developer.cpp src/json_worker.cpp)
 target_include_directories(text_scrum_board PRIVATE include)
  
 target_link_libraries(text_scrum_board

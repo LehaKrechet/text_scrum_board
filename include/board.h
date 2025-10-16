@@ -3,12 +3,13 @@
 #include <string>
 #include <vector>
 #include <column.h>  
-// #include <memory>
+#include <developer.h>
 
 class Board {
     private:
         std::string name;
         std::vector<Column*> columns;
+        std::vector<Developer*> developers;
     public:
         Board(std::string n){
             name = n;
@@ -21,5 +22,10 @@ class Board {
         std::vector<Column*>& get_columns();
         void add_column(Column* col);
         void delete_column(Column* col);
+
+        void add_developer(Developer* develop);
+        void delete_developer(Developer* develop);
+        std::vector<Developer*>& get_developer();
+
 
 };

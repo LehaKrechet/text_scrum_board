@@ -2,7 +2,8 @@
 
 #include <string>
 #include <vector>
-class Task;
+#include <developer.h>
+class Developer;
 
 extern std::vector<std::string> ids;
 
@@ -12,13 +13,14 @@ class Task{
     std::string id;
     std::string title;
     int priority;
-    std::string status;
+    Developer* developer;
 
     public:
         Task(std::string titl){
             title = titl;
             id = generate_id();
             description = "";
+            developer = nullptr;
         }
         Task(const Task &other){
             description = other.description;
@@ -37,4 +39,6 @@ class Task{
         void set_title(std::string titl);
         int get_prioriy();
         void set_priority(int p);
+        void set_developer(Developer *develop);
+        Developer* get_developer();
 };

@@ -1,5 +1,4 @@
 #pragma once
-
 #include <string>
 #include <vector>
 #include <developer.h>
@@ -20,6 +19,7 @@ class Task{
             title = titl;
             id = generate_id();
             description = "";
+            priority = 0;
             developer = nullptr;
         }
         Task(const Task &other){
@@ -40,5 +40,6 @@ class Task{
         int get_prioriy();
         void set_priority(int p);
         void set_developer(Developer *develop);
+        void set_id(std::string new_id);
         Developer* get_developer();
 };

@@ -5,6 +5,8 @@
 #include <column.h>  
 #include <developer.h>
 
+class Column;
+
 class Board {
     private:
         std::string name;

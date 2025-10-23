@@ -3,6 +3,7 @@
 #include <column.h>
 #include <developer.h>
 #include <json_worker.h>
+#include <manager.h>
 // #include <ftxui.h>
 // #include <scrum_board.h>
 #include <iostream>
@@ -68,18 +69,143 @@ int main(){
   for (Developer *element : board.get_developer()){
     std::cout << element->get_name() << " ";
   }
-
+  
   std::cout << std::endl;
-  for (Column *element : board.get_columns()){
-    std::cout << element->get_name() << " ";
-    for (Task *elem : element->get_tasks()){ 
-      // std::cout << elem->get_title() << " " << "(" << elem->get_developer()->get_name() <<")" << " ";
+  // json_worker.board_load(board);
+  int input;
+  std::string tit;
+  while (true){
+
+    std::cin >> input;
+
+    if (input == 1){
+      std::cout << "Enter name new task: ";
+      std::cin >> tit;
+      create_task(board, "Backlog", tit);
+      std::cout << "Succesful" << std::endl;
+
     }
+    if (input == 2){
+
+      for (Column *element : board.get_columns()){
+        std::cout << element->get_name() << " ";
+        for (Task *elem : element->get_tasks()){ 
+          std::cout << elem->get_title() << " " << "(" << elem->get_developer()->get_name() <<")" << " ";
+          
+        }
+      }
+      std::cout << std::endl;
+    }
+    if (input == 3){
+      std::cin >> tit;
+      std::cout << search_task(board,"Backlog", tit)->get_title() << std::endl;
+      std::cout << "Succesful" << std::endl;
+    }
+    if (input == 4){
+      std::cin >> tit;
+      move_task(Backlog, Assigned, search_task(board,"Backlog", tit));
+      std::cout << "Succesful" << std::endl;
+    }
+    if (input == 5){
+      std::cin >> tit;
+      Backlog->delete_task(search_task(board,"Backlog", tit));
+      std::cout << "Succesful" << std::endl;
+    }
+    if (input == 6){
+      std::cin >> tit;
+      create_developer(board, tit);
+      std::cout << "Succesful" << std::endl;
+    }
+    if (input == 7){
+      for(auto i: board.get_developer()){
+        std::cout << i->get_name() << " ";
+      }
+      std::cout << "Succesful" << std::endl;
+    }
+    if (input == 9){
+      break;
+    }
+
   }
   // json_worker.ids_add(ids);
-  json_worker.board_add(board, json_worker.ids_add(ids));
-  json_worker.save();
+  // json_worker.board_add(board, json_worker.ids_add(ids));
+  // json_worker.save();
   std::cout << std::endl;
+  json_worker.board_load(board);
+
+  while (true){
+
+    std::cin >> input;
+
+    if (input == 1){
+      std::cout << "Enter name new task: ";
+      std::cin >> tit;
+      create_task(board, "Backlog", tit);
+      std::cout << "Succesful" << std::endl;
+
+    }
+    if (input == 2){
+
+      for (Column *element : board.get_columns()){
+        std::cout << element->get_name() << " ";
+        for (Task *elem : element->get_tasks()){ 
+          std::cout << elem->get_title() << " " << "(" << elem->get_developer()->get_name() <<")" << " ";
+          
+        }
+      }
+      std::cout << std::endl;
+    }
+    if (input == 3){
+      std::cin >> tit;
+      std::cout << search_task(board,"Backlog", tit)->get_title() << std::endl;
+      std::cout << "Succesful" << std::endl;
+    }
+    if (input == 4){
+      std::cin >> tit;
+      move_task(Backlog, Assigned, search_task(board,"Backlog", tit));
+      std::cout << "Succesful" << std::endl;
+    }
+    if (input == 5){
+      std::cin >> tit;
+      for (auto *i:board.get_columns()){
+        if (i->get_name() == "Backlog"){
+          i->delete_task(search_task(board,"Backlog", tit));
+        }
+      }
+      std::cout << "Succesful" << std::endl;
+    }
+    if (input == 6){
+      std::cin >> tit;
+      create_developer(board, tit);
+      std::cout << "Succesful" << std::endl;
+    }
+    if (input == 7){
+      for(auto i: board.get_developer()){
+        std::cout << i->get_name() << " ";
+      }
+      std::cout << "Succesful" << std::endl;
+    }
+    if (input == 9){
+      break;
+    }
+
+  }
+  for (auto i:ids){
+    std::cout << i << " ";
+  }
+
+  // Перед сохранением
+  json_worker.clear_ids();
+  // Собираем актуальные IDs из всех задач
+  std::vector<std::string> current_ids;
+  for (Column* col : board.get_columns()) {
+      for (Task* task : col->get_tasks()) {
+          current_ids.push_back(task->get_id());
+      }
+  }
+  json_worker.board_add(board, json_worker.ids_add(current_ids));
+  json_worker.save();
+
 
   delete Assigned;
   delete In_progress;

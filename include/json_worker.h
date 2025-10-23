@@ -21,4 +21,6 @@ class Json_worker{
         Value ids_add(std::vector<std::string> id);
         std::vector<std::string> ids_get();
         void board_add(Board board, Value ids);
+        void board_load(Board& board);
+        void clear_ids();
 };

@@ -1,4 +1,5 @@
 #include <task.h>
+#include <column.h>
 #include <string>
 #include <iostream>
 #include <random>
@@ -64,3 +65,6 @@ Developer* Task::get_developer(){
     return developer;
 }
 
+void Task::set_id(std::string new_id){
+    id = new_id;
+}

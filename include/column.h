@@ -2,6 +2,11 @@
 
 #include <vector>
 #include <task.h> 
+#include <string>
+#include <board.h>
+
+class Task;
+class Board;
 
 class Column {
     private:
@@ -26,3 +31,4 @@ class Column {
 
 };
 void move_task(Column *start, Column *end, Task *task);
+Task* search_task(Board &board, std::string col ,std::string title);

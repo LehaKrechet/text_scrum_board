@@ -5,36 +5,14 @@
 #include <fstream>
 #include <json_worker.h>
 #include <board.h>
+#include <sstream>
+#include <algorithm>
+#include <memory>
+#include <task.h>
 
 using namespace rapidjson;
 
-void test(){
-    Document doc;
-    doc.SetObject();
 
-    Document::AllocatorType& allocator = doc.GetAllocator();
-
-    doc.AddMember("name", "Alex", allocator);
-    doc.AddMember("old", "20", allocator);
-
-    //масиив
-    Value hobbies(kArrayType);
-    hobbies.PushBack("PC", allocator);
-    hobbies.PushBack("VR", allocator);
-    doc.AddMember("hobies", hobbies, allocator);
-
-    Value addres2(kObjectType);
-
-    addres2.AddMember("street", "123", allocator);
-    addres2.AddMember("city", "New", allocator);
-    doc.AddMember("addres2", addres2, allocator);
-
-    // Value addres(kObjectType);
-
-    // addres.AddMember("street", addres2, allocator);
-    // addres.AddMember("city", "New", allocator);
-    // doc.AddMember("addres", addres, allocator);
-}
 
 void Json_worker::save(){
     StringBuffer buffer;
@@ -96,6 +74,185 @@ void Json_worker::board_add(Board board, Value ids){
 }
 
 
-// std::vector<std::string> Json_worker::ids_get(){
+std::vector<std::string> Json_worker::ids_get(){
+    std::vector<std::string> result;
+    
+    std::ifstream file(save_path);
+    if (!file.is_open()) {
+        std::cout << "Cannot open file: " << save_path << std::endl;
+        return result;
+    }
+    
+    std::stringstream buffer;
+    buffer << file.rdbuf();
+    file.close();
+    
+    Document temp_doc;
+    temp_doc.Parse(buffer.str().c_str());
+    
+    // Проверяем успешность парсинга
+    if (temp_doc.HasParseError()) {
+        std::cout << "JSON parse error: " << temp_doc.GetParseError() << std::endl;
+        return result;
+    }
+    
+    // Получаем первый (и presumably единственный) ключ корневого объекта
+    if (temp_doc.MemberBegin() != temp_doc.MemberEnd()) {
+        const std::string board_name = temp_doc.MemberBegin()->name.GetString();
+        const Value& board_obj = temp_doc[board_name.c_str()];
+        
+        // Теперь ищем "ids" внутри объекта доски
+        if (board_obj.HasMember("ids") && board_obj["ids"].IsArray()) {
+            const Value& ids_array = board_obj["ids"];
+            for (SizeType i = 0; i < ids_array.Size(); i++) {
+                if (ids_array[i].IsString()) {
+                    result.push_back(ids_array[i].GetString());
+                }
+            }
+            std::cout << "Loaded " << result.size() << " IDs from board: " << board_name << std::endl;
+        } else {
+            std::cout << "No 'ids' array found in board: " << board_name << std::endl;
+        }
+    } else {
+        std::cout << "No boards found in JSON" << std::endl;
+    }
+    
+    return result;
+}
 
-// }
+
+
+
+void Json_worker::board_load(Board& board) {
+    std::ifstream file(save_path);
+    if (!file.is_open()) {
+        std::cout << "Cannot open file: " << save_path << std::endl;
+        return;
+    }
+    
+    std::stringstream buffer;
+    buffer << file.rdbuf();
+    file.close();
+    
+    Document temp_doc;
+    temp_doc.Parse(buffer.str().c_str());
+    
+    if (temp_doc.HasParseError()) {
+        std::cout << "JSON parse error: " << temp_doc.GetParseError() << std::endl;
+        return;
+    }
+    
+    // Получаем первую доску из JSON
+    if (temp_doc.MemberBegin() == temp_doc.MemberEnd()) {
+        std::cout << "No boards found in JSON" << std::endl;
+        return;
+    }
+    
+    const std::string board_name = temp_doc.MemberBegin()->name.GetString();
+    const Value& board_obj = temp_doc[board_name.c_str()];
+    
+    // Устанавливаем имя доски
+    board.set_name(board_name);
+    
+    // Очищаем текущее состояние доски (опционально)
+    // Если хотите полностью заменить содержимое, а не добавить к существующему
+    for (Column* col : board.get_columns()) {
+        delete col;
+    }
+    board.get_columns().clear();
+    
+    for (Developer* dev : board.get_developer()) {
+        delete dev;
+    }
+    board.get_developer().clear();
+    ids.clear();
+    
+    // Восстанавливаем developers
+    if (board_obj.HasMember("developers") && board_obj["developers"].IsArray()) {
+        const Value& developers_array = board_obj["developers"];
+        for (SizeType i = 0; i < developers_array.Size(); i++) {
+            if (developers_array[i].IsString()) {
+                std::string dev_name = developers_array[i].GetString();
+                Developer* developer = new Developer(dev_name);
+                board.add_developer(developer);
+            }
+        }
+    }
+    
+    // Восстанавливаем ids в глобальный вектор
+    if (board_obj.HasMember("ids") && board_obj["ids"].IsArray()) {
+        const Value& ids_array = board_obj["ids"];
+        for (SizeType i = 0; i < ids_array.Size(); i++) {
+            if (ids_array[i].IsString()) {
+                std::string id = ids_array[i].GetString();
+                if (std::find(ids.begin(), ids.end(), id) == ids.end()) {
+                    ids.push_back(id);
+                }
+            }
+        }
+    }
+    
+    // Восстанавливаем колонки и задачи
+    for (Value::ConstMemberIterator itr = board_obj.MemberBegin(); 
+         itr != board_obj.MemberEnd(); ++itr) {
+        
+        // Пропускаем уже обработанные поля
+        if (std::string(itr->name.GetString()) == "developers" || 
+            std::string(itr->name.GetString()) == "ids") {
+            continue;
+        }
+        
+        // Создаем колонку
+        std::string column_name = itr->name.GetString();
+        Column* column = new Column(column_name);
+        
+        // Восстанавливаем задачи в колонке
+        if (itr->value.IsObject()) {
+            const Value& tasks_obj = itr->value;
+            
+            for (Value::ConstMemberIterator task_itr = tasks_obj.MemberBegin();
+                 task_itr != tasks_obj.MemberEnd(); ++task_itr) {
+                
+                std::string task_title = task_itr->name.GetString();
+                const Value& task_data = task_itr->value;
+                
+                // Создаем задачу
+                Task* task = new Task(task_title);
+                
+                // Восстанавливаем поля задачи
+                if (task_data.HasMember("description") && task_data["description"].IsString()) {
+                    task->set_description(task_data["description"].GetString());
+                }
+                
+                if (task_data.HasMember("priority") && task_data["priority"].IsInt()) {
+                    task->set_priority(task_data["priority"].GetInt());
+                }
+                
+                // Восстанавливаем разработчика
+                if (task_data.HasMember("developer") && task_data["developer"].IsString()) {
+                    std::string dev_name = task_data["developer"].GetString();
+                    
+                    // Ищем разработчика в доске
+                    for (Developer* dev : board.get_developer()) {
+                        if (dev->get_name() == dev_name) {
+                            task->set_developer(dev);
+                            break;
+                        }
+                    }
+                }
+                
+                // Добавляем задачу в колонку
+                column->add_task(task);
+            }
+        }
+        
+        // Добавляем колонку в доску
+        board.add_column(column);
+    }
+    
+    std::cout << "Board '" << board_name << "' loaded successfully!" << std::endl;
+}
+
+void Json_worker::clear_ids() {
+    ids.clear();
+}

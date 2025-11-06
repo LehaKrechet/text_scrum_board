@@ -127,7 +127,7 @@ void Json_worker::board_load(Board& board) {
     std::ifstream file(save_path);
     if (!file.is_open()) {
         std::cout << "Cannot open file: " << save_path << std::endl;
-        return;
+        throw std::runtime_error("Cannot open file");
     }
     
     std::stringstream buffer;
@@ -139,8 +139,9 @@ void Json_worker::board_load(Board& board) {
     
     if (temp_doc.HasParseError()) {
         std::cout << "JSON parse error: " << temp_doc.GetParseError() << std::endl;
-        return;
+        throw std::runtime_error("Invalid JSON format");
     }
+    
     
     // Получаем первую доску из JSON
     if (temp_doc.MemberBegin() == temp_doc.MemberEnd()) {
@@ -255,4 +256,75 @@ void Json_worker::board_load(Board& board) {
 
 void Json_worker::clear_ids() {
     ids.clear();
+}
+bool Json_worker::is_valid_board_file(const std::string& file_path) {
+    std::ifstream file(file_path);
+    if (!file.is_open()) {
+        std::cout << "Cannot open file: " << file_path << std::endl;
+        return false;
+    }
+    
+    std::stringstream buffer;
+    buffer << file.rdbuf();
+    file.close();
+    
+    Document temp_doc;
+    temp_doc.Parse(buffer.str().c_str());
+    
+    // Проверяем успешность парсинга
+    if (temp_doc.HasParseError()) {
+        std::cout << "Invalid JSON format" << std::endl;
+        return false;
+    }
+    
+    // Проверяем что это объект
+    if (!temp_doc.IsObject()) {
+        std::cout << "Root element is not an object" << std::endl;
+        return false;
+    }
+    
+    // Проверяем что есть хотя бы один член (имя доски)
+    if (temp_doc.MemberBegin() == temp_doc.MemberEnd()) {
+        std::cout << "No board found in file" << std::endl;
+        return false;
+    }
+    
+    // Проверяем структуру доски
+    const std::string board_name = temp_doc.MemberBegin()->name.GetString();
+    const Value& board_obj = temp_doc[board_name.c_str()];
+    
+    if (!board_obj.IsObject()) {
+        std::cout << "Board data is not an object" << std::endl;
+        return false;
+    }
+    
+    // Проверяем наличие обязательных полей или структуры
+    bool has_valid_structure = false;
+    
+    // Проверяем наличие колонок или developers
+    for (Value::ConstMemberIterator itr = board_obj.MemberBegin(); 
+         itr != board_obj.MemberEnd(); ++itr) {
+        std::string field_name = itr->name.GetString();
+        
+        // Если есть поле developers или ids, считаем файл валидным
+        if (field_name == "developers" || field_name == "ids") {
+            has_valid_structure = true;
+            break;
+        }
+        
+        // Или если есть хотя бы одна колонка с задачами
+        if (itr->value.IsObject()) {
+            const Value& tasks_obj = itr->value;
+            if (tasks_obj.MemberBegin() != tasks_obj.MemberEnd()) {
+                has_valid_structure = true;
+                break;
+            }
+        }
+    }
+    
+    if (!has_valid_structure) {
+        std::cout << "File doesn't contain valid board structure" << std::endl;
+    }
+    
+    return has_valid_structure;
 }

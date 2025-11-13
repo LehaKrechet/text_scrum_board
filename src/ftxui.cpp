@@ -7,6 +7,19 @@
 
 using namespace ftxui;
 
+// ДОБАВЛЯЕМ РЕАЛИЗАЦИЮ ФУНКЦИИ
+void ScrumBoardUI::refresh_ui_data() {
+    // Обновляем только данные, не пересоздавая компоненты
+    update_task_list();
+    update_developer_list();
+    
+    // Обновляем имена колонок
+    column_names.clear();
+    for (auto* col : board->get_columns()) {
+        column_names.push_back(col->get_name());
+    }
+}
+
 ScrumBoardUI::ScrumBoardUI() {
     // Создаем пустую доску вместо загрузки последней
     board = std::make_shared<Board>("ScrumBoard");
@@ -222,7 +235,7 @@ void ScrumBoardUI::run() {
             task_title.clear();
             task_description.clear();
             task_priority_str.clear();
-            update_task_list();
+            refresh_ui_data(); // Только обновляем данные
         } else {
             std::cout << "Error: Task title cannot be empty" << std::endl;
         }
@@ -238,7 +251,7 @@ void ScrumBoardUI::run() {
         if (!developer_name.empty()) {
             create_developer(*board, developer_name);
             developer_name.clear();
-            update_developer_list();
+            refresh_ui_data(); // Только обновляем данные
             std::cout << "Developer added successfully!" << std::endl;
         }
     }, ButtonOption::Animated());
@@ -267,8 +280,7 @@ void ScrumBoardUI::run() {
             }
             
             if (found) {
-                update_developer_list();
-                update_task_list();
+                refresh_ui_data(); // Только обновляем данные
                 std::cout << "Developer deleted successfully!" << std::endl;
             }
         }
@@ -297,7 +309,7 @@ void ScrumBoardUI::run() {
                     
                     if (source_column && dest_column && task) {
                         move_task(source_column, dest_column, task);
-                        update_task_list();
+                        refresh_ui_data(); // Только обновляем данные
                         std::cout << "Task moved successfully!" << std::endl;
                     }
                 } catch (const std::out_of_range& e) {
@@ -323,7 +335,7 @@ void ScrumBoardUI::run() {
                             if (task) {
                                 col->delete_task(task);
                                 delete task;
-                                update_task_list();
+                                refresh_ui_data(); // Только обновляем данные
                                 std::cout << "Task deleted successfully!" << std::endl;
                                 break;
                             }
@@ -362,6 +374,7 @@ void ScrumBoardUI::run() {
                     
                     if (developer && task) {
                         task->set_developer(developer);
+                        refresh_ui_data(); // Только обновляем данные
                         std::cout << "Developer assigned successfully!" << std::endl;
                     }
                 } catch (const std::out_of_range& e) {
@@ -428,7 +441,7 @@ void ScrumBoardUI::run() {
         if (!developer_name.empty()) {
             create_developer(*board, developer_name);
             developer_name.clear();
-            update_developer_list();
+            refresh_ui_data(); // Только обновляем данные
             std::cout << "Developer added successfully!" << std::endl;
         }
     }, ButtonOption::Animated());
@@ -457,8 +470,7 @@ void ScrumBoardUI::run() {
             }
             
             if (found) {
-                update_developer_list();
-                update_task_list();
+                refresh_ui_data(); // Только обновляем данные
                 std::cout << "Developer deleted successfully!" << std::endl;
             }
         }
@@ -517,6 +529,7 @@ void ScrumBoardUI::run() {
                     
                     if (developer && task) {
                         task->set_developer(developer);
+                        refresh_ui_data(); // Только обновляем данные
                         std::cout << "Developer assigned successfully!" << std::endl;
                     }
                 } catch (const std::out_of_range& e) {
@@ -638,8 +651,8 @@ void ScrumBoardUI::run() {
             try {
                 json_worker = std::make_shared<Json_worker>(full_path.string());
                 json_worker->board_load(*board);
-                initialize_board();
-                setup_ui_components();
+                initialize_board(); // Переинициализируем доску
+                refresh_ui_data(); // ОБНОВЛЯЕМ ДАННЫЕ БЕЗ ПЕРЕСОЗДАНИЯ КОМПОНЕНТОВ
                 save_path = full_path.string();
                 std::cout << "Board successfully loaded from: " << full_path.string() << std::endl;
             } catch (const std::exception& e) {

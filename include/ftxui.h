@@ -55,6 +55,8 @@ private:
     void update_developer_list();
     void update_file_list();
     void setup_ui_components();
+    void recreate_ui_components(); // Новая функция для пересоздания компонентов
+    void refresh_ui_data();
     ftxui::Element render_board();
     ftxui::Element render_task_creation();
     ftxui::Element render_developer_creation();

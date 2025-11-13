@@ -235,3 +235,38 @@ int main() {
     
     return 0;
 }
+
+
+
+// #include <ftxui.h>
+// #include <vector>
+// #include <string>
+
+// using namespace ftxui;
+
+// int main() {
+//   std::vector<std::string> items;
+//   for (int i = 0; i < 100; ++i) {
+//     items.push_back("Элемент " + std::to_string(i + 1));
+//   }
+
+//   int selected = 0;
+//   auto container = Container::Vertical({});
+  
+//   for (size_t i = 0; i < items.size(); ++i) {
+//     container->Add(MenuEntry(items[i]));
+//   }
+
+//   auto renderer = Renderer(container, [&] {
+//     return container->Render() | 
+//            vscroll_indicator | 
+//            frame | 
+//            border |
+//            size(HEIGHT, LESS_THAN, 10); // Важно: ограничиваем высоту
+//   });
+
+//   auto screen = ScreenInteractive::TerminalOutput();
+//   screen.Loop(renderer);
+  
+//   return 0;
+// }

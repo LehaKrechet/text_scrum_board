@@ -26,6 +26,7 @@ ScrumBoardUI::ScrumBoardUI() {
     initialize_board();
     setup_ui_components();
     previous_component = 2;
+    
 }
 
 void ScrumBoardUI::initialize_board() {
@@ -175,7 +176,7 @@ Element ScrumBoardUI::render_board() {
                     text("📝 " + task->get_title()) | bold,
                     text("📋 " + task->get_description()),
                     text("🎯 Priority: " + std::to_string(task->get_prioriy())),
-                    text("👨‍💻 " + developer_name),
+                    text("👨 " + developer_name),
                     separator()
                 }) | border | flex;
                 

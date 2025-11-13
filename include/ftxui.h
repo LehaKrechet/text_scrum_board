@@ -26,6 +26,9 @@ private:
     ftxui::Component file_path_input;
     ftxui::Component file_list_selection;
     
+    // Компоненты для прокрутки колонок
+    std::vector<ftxui::Component> column_containers;
+    
     // Состояния
     std::string task_title;
     std::string task_description;
@@ -48,15 +51,15 @@ private:
     std::vector<std::string> task_titles;
     std::vector<std::string> developer_names;
     std::vector<std::string> json_files;
-    
-    
+
     void initialize_board();
     void update_task_list();
     void update_developer_list();
     void update_file_list();
     void setup_ui_components();
-    void recreate_ui_components(); // Новая функция для пересоздания компонентов
+    void recreate_ui_components();
     void refresh_ui_data();
+    void setup_column_scroll_containers(); // Новая функция для настройки прокрутки
     ftxui::Element render_board();
     ftxui::Element render_task_creation();
     ftxui::Element render_developer_creation();

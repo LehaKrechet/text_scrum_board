@@ -1,8 +1,8 @@
-cmake_minimum_required (VERSION 3.11)
- 
+cmake_minimum_required (VERSION 3.14)  # Повышаем минимальную версию CMake
+
 # --- Fetch FTXUI --------------------------------------------------------------
 include(FetchContent)
- 
+
 set(FETCHCONTENT_UPDATES_DISCONNECTED TRUE)
 
 # Загружаем googletest первым
@@ -17,13 +17,21 @@ FetchContent_Declare(ftxui
   GIT_TAG main
 )
 
+# Для RapidJSON используем более стабильную версию
 FetchContent_Declare(rapidjson
   GIT_REPOSITORY https://github.com/Tencent/rapidjson.git
-  GIT_TAG master
+  GIT_TAG v1.1.0  # Используем стабильную версию вместо master
 )
 
 # Загружаем все зависимости
-FetchContent_MakeAvailable(googletest ftxui rapidjson)
+FetchContent_MakeAvailable(googletest ftxui)
+
+# RapidJSON загружаем отдельно, так как у него проблемы с CMake
+FetchContent_GetProperties(rapidjson)
+if(NOT rapidjson_POPULATED)
+  FetchContent_Populate(rapidjson)
+  # Не добавляем rapidjson в сборку, используем только заголовки
+endif()
 
 # ------------------------------------------------------------------------------
  

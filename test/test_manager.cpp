@@ -6,18 +6,15 @@ class ManagerTest : public ::testing::Test {
 protected:
     void SetUp() override {
         board = new Board("Test Board");
-        // Add standard columns
         board->add_column(new Column("Backlog"));
         board->add_column(new Column("In Progress"));
         board->add_column(new Column("Done"));
     }
 
     void TearDown() override {
-        // Clean up columns
         for (auto col : board->get_columns()) {
             delete col;
         }
-        // Clean up developers
         for (auto dev : board->get_developer()) {
             delete dev;
         }
@@ -45,10 +42,10 @@ TEST_F(ManagerTest, CreateTask) {
 }
 
 TEST_F(ManagerTest, CreateTaskInNonExistentColumn) {
-    // Should not crash when column doesn't exist
+
     create_task(*board, "NonExistent", "New Task");
     
-    // Task should not be created in any column
+
     int totalTasks = 0;
     for (auto col : board->get_columns()) {
         totalTasks += col->get_tasks().size();

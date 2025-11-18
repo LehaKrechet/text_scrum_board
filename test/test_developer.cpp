@@ -14,6 +14,4 @@ TEST(DeveloperTest, SetName) {
 
 TEST(DeveloperTest, NullSafety) {
     Developer* null_dev = nullptr;
-    // This should not crash
-    // Note: Your current implementation has null checks, which is good
 }

@@ -96,7 +96,7 @@ std::vector<std::string> Json_worker::ids_get(){
         return result;
     }
     
-    // Получаем первый (и presumably единственный) ключ корневого объекта
+    // Получаем первый ключ корневого объекта
     if (temp_doc.MemberBegin() != temp_doc.MemberEnd()) {
         const std::string board_name = temp_doc.MemberBegin()->name.GetString();
         const Value& board_obj = temp_doc[board_name.c_str()];
@@ -155,8 +155,6 @@ void Json_worker::board_load(Board& board) {
     // Устанавливаем имя доски
     board.set_name(board_name);
     
-    // Очищаем текущее состояние доски (опционально)
-    // Если хотите полностью заменить содержимое, а не добавить к существующему
     for (Column* col : board.get_columns()) {
         delete col;
     }

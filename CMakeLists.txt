@@ -12,7 +12,13 @@ FetchContent_Declare(rapidjson
   GIT_REPOSITORY https://github.com/Tencent/rapidjson.git
   GIT_TAG master
 )
- 
+FetchContent_Declare(
+  googletest
+  GIT_REPOSITORY https://github.com/google/googletest.git
+  GIT_TAG release-1.12.1
+)
+FetchContent_MakeAvailable(googletest)
+
 FetchContent_GetProperties(ftxui)
 if(NOT ftxui_POPULATED)
   FetchContent_Populate(ftxui)
@@ -35,19 +41,16 @@ enable_testing()
 find_package(GTest REQUIRED)
 add_executable(scrum_board_tests
     test/test_main.cpp
-    test/test_search.cpp
     test/test_board.cpp
     test/test_developer.cpp
     test/test_column.cpp
     test/test_task.cpp
     test/test_manager.cpp
-    test/test_json_worker.cpp
     src/board.cpp
     src/column.cpp
     src/task.cpp
     src/developer.cpp
     src/manager.cpp
-    src/json_worker.cpp
 )
 add_executable(text_scrum_board src/main.cpp src/task.cpp src/column.cpp src/board.cpp src/developer.cpp src/json_worker.cpp src/manager.cpp src/ftxui.cpp)
 target_include_directories(text_scrum_board PRIVATE include)

@@ -47,7 +47,6 @@ TEST_F(ColumnTest, DeleteTask) {
 }
 
 TEST_F(ColumnTest, DeleteNonExistentTask) {
-    // Should not crash when deleting task that doesn't exist
     column->delete_task(task1);
     EXPECT_TRUE(column->get_tasks().empty());
 }

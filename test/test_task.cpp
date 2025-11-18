@@ -36,7 +36,6 @@ TEST_F(TaskTest, SetAndGetPriority) {
     task->set_priority(5);
     EXPECT_EQ(task->get_prioriy(), 5);
     
-    // Test boundary values
     task->set_priority(-1);
     EXPECT_EQ(task->get_prioriy(), -1);
     

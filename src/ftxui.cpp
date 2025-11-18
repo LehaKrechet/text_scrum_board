@@ -7,7 +7,6 @@
 
 using namespace ftxui;
 
-// ДОБАВЛЯЕМ РЕАЛИЗАЦИЮ ФУНКЦИИ
 void ScrumBoardUI::refresh_ui_data() {
     // Обновляем только данные, не пересоздавая компоненты
     update_task_list();
@@ -21,7 +20,7 @@ void ScrumBoardUI::refresh_ui_data() {
 }
 
 ScrumBoardUI::ScrumBoardUI() {
-    // Создаем пустую доску вместо загрузки последней
+    // Создаем пустую доску
     board = std::make_shared<Board>("ScrumBoard");
     initialize_board();
     setup_ui_components();
@@ -236,7 +235,7 @@ void ScrumBoardUI::run() {
             task_title.clear();
             task_description.clear();
             task_priority_str.clear();
-            refresh_ui_data(); // Только обновляем данные
+            refresh_ui_data();
         } else {
             std::cout << "Error: Task title cannot be empty" << std::endl;
         }
@@ -252,7 +251,7 @@ void ScrumBoardUI::run() {
         if (!developer_name.empty()) {
             create_developer(*board, developer_name);
             developer_name.clear();
-            refresh_ui_data(); // Только обновляем данные
+            refresh_ui_data();
             std::cout << "Developer added successfully!" << std::endl;
         }
     }, ButtonOption::Animated());
@@ -281,7 +280,7 @@ void ScrumBoardUI::run() {
             }
             
             if (found) {
-                refresh_ui_data(); // Только обновляем данные
+                refresh_ui_data(); 
                 std::cout << "Developer deleted successfully!" << std::endl;
             }
         }
@@ -336,7 +335,7 @@ void ScrumBoardUI::run() {
                             if (task) {
                                 col->delete_task(task);
                                 delete task;
-                                refresh_ui_data(); // Только обновляем данные
+                                refresh_ui_data(); 
                                 std::cout << "Task deleted successfully!" << std::endl;
                                 break;
                             }
@@ -375,7 +374,7 @@ void ScrumBoardUI::run() {
                     
                     if (developer && task) {
                         task->set_developer(developer);
-                        refresh_ui_data(); // Только обновляем данные
+                        refresh_ui_data(); 
                         std::cout << "Developer assigned successfully!" << std::endl;
                     }
                 } catch (const std::out_of_range& e) {
@@ -423,7 +422,6 @@ void ScrumBoardUI::run() {
     update_file_list();
     }, ButtonOption::Animated());
 
-    // Task Creation Tab
     auto task_creation_buttons = Container::Horizontal({
         create_task_btn,
         clear_task_btn
@@ -437,12 +435,11 @@ void ScrumBoardUI::run() {
         task_creation_buttons
     });
 
-    // Developer Creation Tab
     auto dev_creation_add_btn = Button("Add Developer", [this] {
         if (!developer_name.empty()) {
             create_developer(*board, developer_name);
             developer_name.clear();
-            refresh_ui_data(); // Только обновляем данные
+            refresh_ui_data(); 
             std::cout << "Developer added successfully!" << std::endl;
         }
     }, ButtonOption::Animated());
@@ -471,7 +468,7 @@ void ScrumBoardUI::run() {
             }
             
             if (found) {
-                refresh_ui_data(); // Только обновляем данные
+                refresh_ui_data();
                 std::cout << "Developer deleted successfully!" << std::endl;
             }
         }
@@ -490,7 +487,7 @@ void ScrumBoardUI::run() {
         developer_creation_buttons
     });
 
-    // Task Management Tab
+    
     auto task_management_buttons = Container::Horizontal({
         move_task_btn,
         delete_task_btn
@@ -503,7 +500,7 @@ void ScrumBoardUI::run() {
         task_management_buttons
     });
 
-    // Developer Assignment Tab
+    
     auto dev_assignment_btn = Button("Assign Developer", [this] {
         if (!task_titles.empty() && !developer_names.empty() && 
             selected_task < task_titles.size() && selected_developer < developer_names.size()) {
@@ -530,7 +527,7 @@ void ScrumBoardUI::run() {
                     
                     if (developer && task) {
                         task->set_developer(developer);
-                        refresh_ui_data(); // Только обновляем данные
+                        refresh_ui_data(); 
                         std::cout << "Developer assigned successfully!" << std::endl;
                     }
                 } catch (const std::out_of_range& e) {
@@ -549,7 +546,7 @@ void ScrumBoardUI::run() {
         dev_assignment_btn
     });
 
-    // Control Buttons
+  
     auto control_buttons = Container::Horizontal({
         save_btn,
         load_btn,
@@ -839,7 +836,7 @@ void ScrumBoardUI::run() {
         return vbox(elements) | border;
     });
 
-    // Создаем табы для разных функций - ВОЗВРАЩАЕМ ОРИГИНАЛЬНЫЙ ДИЗАЙН
+    // Создаем табы для разных функций 
     // Первая вкладка - доска, остальные - функции управления
     std::vector<Component> tab_content_components = {
         board_renderer,

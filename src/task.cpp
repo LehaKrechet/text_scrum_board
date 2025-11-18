@@ -6,7 +6,7 @@
 #include <algorithm>
 #include <json_worker.h>
 
-std::vector<std::string> ids = {}; //Из json файла 
+std::vector<std::string> ids = {}; 
 
 std::string generate_random_string(int length) {
     const std::string charset = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";

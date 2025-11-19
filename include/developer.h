@@ -1,15 +1,20 @@
 #pragma once
 
 #include <string>
-#include <vector>
-#include <task.h>
 
-class Developer{
-    std::string name;
-    public:
-        Developer (std::string n){
-            name = n;
-        }
-        std::string get_name();
-        void set_name(std::string n);
+// Класс Developer представляет разработчика в команде
+// Содержит базовую информацию о разработчике
+class Developer {
+private:
+    std::string name;  // Имя разработчика
+    
+public:
+    // Конструктор с обязательным именем
+    Developer(std::string n) : name(n) {}
+    
+    // Получение имени разработчика
+    std::string get_name() const;
+    
+    // Установка имени разработчика с валидацией
+    void set_name(std::string n);
 };

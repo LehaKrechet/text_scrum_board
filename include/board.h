@@ -2,32 +2,42 @@
 
 #include <string>
 #include <vector>
-#include <column.h>  
-#include <developer.h>
+#include <memory>
+#include "column.h"
+#include "developer.h"
 
+// Предварительное объявление класса Column
 class Column;
 
+// Класс Board представляет всю Scrum доску
+// Содержит колонки, разработчиков и общую информацию о доске
 class Board {
-    private:
-        std::string name;
-        std::vector<Column*> columns;
-        std::vector<Developer*> developers;
-    public:
-        Board(std::string n){
-            name = n;
-            columns = {};
-        }
+private:
+    std::string name;  // Название доски
+    std::vector<std::unique_ptr<Column>> columns;      // Список колонок на доске
+    std::vector<std::unique_ptr<Developer>> developers; // Список разработчиков команды
 
-        void set_name(std::string n);
-        std::string get_name();
-
-        std::vector<Column*>& get_columns();
-        void add_column(Column* col);
-        void delete_column(Column* col);
-
-        void add_developer(Developer* develop);
-        void delete_developer(Developer* develop);
-        std::vector<Developer*>& get_developer();
-
-
+public:
+    // Конструктор доски с обязательным названием
+    Board(std::string n) : name(n) {} // Векторы инициализируются по умолчанию
+    
+    // Методы для работы с названием доски
+    void set_name(std::string n);
+    std::string get_name() const;
+    
+    // Методы для работы с колонками
+    std::vector<std::unique_ptr<Column>>& get_columns();
+    const std::vector<std::unique_ptr<Column>>& get_columns() const;
+    void add_column(std::unique_ptr<Column> col);
+    void clear_columns();
+    
+    // Методы для работы с разработчиками
+    std::vector<std::unique_ptr<Developer>>& get_developers();
+    const std::vector<std::unique_ptr<Developer>>& get_developers() const;
+    void add_developer(std::unique_ptr<Developer> develop);
+    void clear_developers();
+    
+    // Методы поиска
+    Developer* find_developer(const std::string& name) const;  // Поиск разработчика по имени
+    Column* find_column(const std::string& name) const;        // Поиск колонки по имени
 };

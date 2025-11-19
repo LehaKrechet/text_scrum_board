@@ -7,13 +7,16 @@
 #include <memory>
 #include <filesystem>
 
+// Класс ScrumBoardUI реализует пользовательский интерфейс
+// для управления Scrum доской с использованием библиотеки FTXUI
 class ScrumBoardUI {
 private:
-    std::shared_ptr<Board> board;
-    std::shared_ptr<Json_worker> json_worker;
-    std::string save_path = "../boards/board.json";
+    // Основные данные приложения
+    std::shared_ptr<Board> board;           // Умный указатель на доску
+    std::shared_ptr<Json_worker> json_worker; // Умный указатель на JSON worker
+    std::string save_path = "../boards/board.json";  // Путь по умолчанию для сохранения
     
-    // UI компоненты
+    // Компоненты UI (поля ввода, выбора и т.д.)
     ftxui::Component task_title_input;
     ftxui::Component task_description_input;
     ftxui::Component task_priority_input;
@@ -26,10 +29,7 @@ private:
     ftxui::Component file_path_input;
     ftxui::Component file_list_selection;
     
-    // Компоненты для прокрутки колонок
-    std::vector<ftxui::Component> column_containers;
-    
-    // Состояния
+    // Переменные состояния UI
     std::string task_title;
     std::string task_description;
     std::string task_priority_str;
@@ -42,32 +42,33 @@ private:
     int selected_developer = 0;
     int selected_file = 0;
     int current_tab = 0;
-    bool show_file_dialog = false;
-    bool is_save_dialog = false;
     int previous_component = 0;
     
-    // Списки для выбора
+    // Контейнеры данных для UI
     std::vector<std::string> column_names;
     std::vector<std::string> task_titles;
     std::vector<std::string> developer_names;
     std::vector<std::string> json_files;
 
-    void initialize_board();
-    void update_task_list();
-    void update_developer_list();
-    void update_file_list();
-    void setup_ui_components();
-    void recreate_ui_components();
-    void refresh_ui_data();
-    void setup_column_scroll_containers(); // Новая функция для настройки прокрутки
-    ftxui::Element render_board();
-    ftxui::Element render_task_creation();
-    ftxui::Element render_developer_creation();
-    ftxui::Element render_task_management();
-    ftxui::Element render_developer_assignment();
-    ftxui::Element render_file_dialog();
+    // Приватные методы для внутренней логики UI
+    void initialize_board();      // Инициализация доски
+    void update_task_list();      // Обновление списка задач
+    void update_developer_list(); // Обновление списка разработчиков
+    void update_file_list();      // Обновление списка файлов
+    void setup_ui_components();   // Настройка компонентов UI
+    void refresh_ui_data();       // Обновление всех данных UI
+    ftxui::Element render_board(); // Отрисовка доски
+    
+    // Обработчики событий
+    void handle_create_task();     // Создание задачи
+    void handle_move_task();       // Перемещение задачи
+    void handle_delete_task();     // Удаление задачи
+    void handle_add_developer();   // Добавление разработчика
+    void handle_delete_developer(); // Удаление разработчика
+    void handle_assign_developer(); // Назначение разработчика
+    void handle_save_load_dialog(bool is_save, const std::string& new_file_name, int selected_file); // Диалог сохранения/загрузки
 
 public:
-    ScrumBoardUI();
-    void run();
+    ScrumBoardUI();  // Конструктор
+    void run();      // Основной метод запуска приложения
 };

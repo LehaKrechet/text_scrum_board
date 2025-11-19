@@ -4,59 +4,58 @@
 #include <algorithm>
 #include <filesystem>
 #include <fstream>
+#include <stdexcept>
 
 using namespace ftxui;
 
+// Обновление данных пользовательского интерфейса
 void ScrumBoardUI::refresh_ui_data() {
-    // Обновляем только данные, не пересоздавая компоненты
-    update_task_list();
-    update_developer_list();
+    update_task_list();        // Обновление списка задач
+    update_developer_list();   // Обновление списка разработчиков
     
-    // Обновляем имена колонок
+    // Обновление списка названий колонок
     column_names.clear();
-    for (auto* col : board->get_columns()) {
+    for (const auto& col : board->get_columns()) {
         column_names.push_back(col->get_name());
     }
 }
 
+// Конструктор UI
 ScrumBoardUI::ScrumBoardUI() {
-    // Создаем пустую доску
+    // Создание новой доски с именем по умолчанию
     board = std::make_shared<Board>("ScrumBoard");
-    initialize_board();
-    setup_ui_components();
-    previous_component = 2;
-    
+    initialize_board();    // Инициализация начального состояния доски
+    setup_ui_components(); // Настройка компонентов интерфейса
+    previous_component = 2; // Установка начального состояния
 }
 
+// Инициализация доски начальными данными
 void ScrumBoardUI::initialize_board() {
-    // Добавляем стандартные колонки если их нет
+    // Если колонок нет - создаем стандартный набор
     if (board->get_columns().empty()) {
-        board->add_column(new Column("Backlog"));
-        board->add_column(new Column("Assigned"));
-        board->add_column(new Column("In Progress"));
-        board->add_column(new Column("Blocked"));
-        board->add_column(new Column("Done"));
+        board->add_column(std::make_unique<Column>("Backlog"));
+        board->add_column(std::make_unique<Column>("Assigned"));
+        board->add_column(std::make_unique<Column>("In Progress"));
+        board->add_column(std::make_unique<Column>("Blocked"));
+        board->add_column(std::make_unique<Column>("Done"));
     }
     
-    update_task_list();
-    update_developer_list();
-    
-    // Заполняем имена колонок
-    column_names.clear();
-    for (auto* col : board->get_columns()) {
-        column_names.push_back(col->get_name());
-    }
+    refresh_ui_data(); // Обновление UI после инициализации
 }
 
+// Обновление списка задач для отображения в UI
 void ScrumBoardUI::update_task_list() {
     task_titles.clear();
-    for (auto* col : board->get_columns()) {
-        for (auto* task : col->get_tasks()) {
+    
+    // Сбор всех задач со всех колонок
+    for (const auto& col : board->get_columns()) {
+        for (const auto& task : col->get_tasks()) {
+            // Формат: "Название задачи (Название колонки)"
             task_titles.push_back(task->get_title() + " (" + col->get_name() + ")");
         }
     }
     
-    // Корректируем selected_task если нужно
+    // Корректировка выбранной задачи если необходимо
     if (!task_titles.empty() && selected_task >= task_titles.size()) {
         selected_task = 0;
     } else if (task_titles.empty()) {
@@ -64,13 +63,16 @@ void ScrumBoardUI::update_task_list() {
     }
 }
 
+// Обновление списка разработчиков для отображения в UI
 void ScrumBoardUI::update_developer_list() {
     developer_names.clear();
-    for (auto* dev : board->get_developer()) {
+    
+    // Сбор имен всех разработчиков
+    for (const auto& dev : board->get_developers()) {
         developer_names.push_back(dev->get_name());
     }
     
-    // Корректируем selected_developer если нужно
+    // Корректировка выбранного разработчика если необходимо
     if (!developer_names.empty() && selected_developer >= developer_names.size()) {
         selected_developer = 0;
     } else if (developer_names.empty()) {
@@ -78,6 +80,7 @@ void ScrumBoardUI::update_developer_list() {
     }
 }
 
+// Обновление списка JSON файлов в текущей директории
 void ScrumBoardUI::update_file_list() {
     json_files.clear();
     
@@ -88,16 +91,16 @@ void ScrumBoardUI::update_file_list() {
     try {
         std::filesystem::path path(file_path_input_str);
         
-        // Если путь - директория, ищем JSON файлы в ней
+        // Обработка разных случаев пути
         if (std::filesystem::is_directory(path)) {
+            // Если путь - директория, ищем все JSON файлы в ней
             for (const auto& entry : std::filesystem::directory_iterator(path)) {
                 if (entry.is_regular_file() && entry.path().extension() == ".json") {
                     json_files.push_back(entry.path().filename().string());
                 }
             }
-        }
-        // Если путь - файл, показываем его и другие файлы в той же директории
-        else if (std::filesystem::is_regular_file(path)) {
+        } else if (std::filesystem::is_regular_file(path)) {
+            // Если путь - файл, переходим к родительской директории
             auto parent_path = path.parent_path();
             file_path_input_str = parent_path.string();
             
@@ -106,9 +109,8 @@ void ScrumBoardUI::update_file_list() {
                     json_files.push_back(entry.path().filename().string());
                 }
             }
-        }
-        // Если путь не существует, пытаемся получить родительскую директорию
-        else {
+        } else {
+            // Если путь не существует, пробуем родительскую директорию
             auto parent_path = path.parent_path();
             if (std::filesystem::is_directory(parent_path)) {
                 file_path_input_str = parent_path.string();
@@ -124,7 +126,7 @@ void ScrumBoardUI::update_file_list() {
         std::cout << "Error reading directory: " << e.what() << std::endl;
     }
     
-    // Корректируем selected_file если нужно
+    // Корректировка выбранного файла если необходимо
     if (!json_files.empty() && selected_file >= json_files.size()) {
         selected_file = 0;
     } else if (json_files.empty()) {
@@ -132,15 +134,16 @@ void ScrumBoardUI::update_file_list() {
     }
 }
 
+// Настройка всех компонентов пользовательского интерфейса
 void ScrumBoardUI::setup_ui_components() {
-    // Инициализация компонентов ввода
+    // Создание компонентов ввода
     task_title_input = Input(&task_title, "Enter task title");
     task_description_input = Input(&task_description, "Enter task description");
     task_priority_input = Input(&task_priority_str, "Enter task priority (0-10)");
     developer_name_input = Input(&developer_name, "Enter developer name");
     file_path_input = Input(&file_path_input_str, "Enter file path");
     
-    // Компоненты выбора
+    // Создание компонентов выбора
     column_selection = Radiobox(&column_names, &selected_column);
     source_column_selection = Radiobox(&column_names, &selected_source_column);
     destination_column_selection = Radiobox(&column_names, &selected_destination_column);
@@ -149,19 +152,322 @@ void ScrumBoardUI::setup_ui_components() {
     file_list_selection = Radiobox(&json_files, &selected_file);
 }
 
+// Обработчик создания новой задачи
+void ScrumBoardUI::handle_create_task() {
+    if (!task_title.empty()) {
+        std::string column_name = column_names[selected_column];
+        
+        try {
+            // Создание задачи через менеджер
+            create_task(*board, column_name, task_title);
+            
+            // Поиск созданной задачи для установки дополнительных полей
+            ::Task* task_ptr = search_task(*board, column_name, task_title);
+            if (task_ptr) {
+                task_ptr->set_description(task_description);
+                
+                // Установка приоритета с валидацией
+                if (!task_priority_str.empty()) {
+                    try {
+                        int priority = std::stoi(task_priority_str);
+                        task_ptr->set_priority(std::max(0, std::min(10, priority)));
+                    } catch (const std::exception& e) {
+                        task_ptr->set_priority(0); // Приоритет по умолчанию при ошибке
+                    }
+                }
+                std::cout << "Task created successfully!" << std::endl;
+            }
+            
+            // Очистка полей ввода
+            task_title.clear();
+            task_description.clear();
+            task_priority_str.clear();
+            refresh_ui_data(); // Обновление UI
+        } catch (const std::exception& e) {
+            std::cout << "Error creating task: " << e.what() << std::endl;
+        }
+    } else {
+        std::cout << "Error: Task title cannot be empty" << std::endl;
+    }
+}
+
+// Обработчик перемещения задачи между колонками
+void ScrumBoardUI::handle_move_task() {
+    if (selected_source_column != selected_destination_column && 
+        !task_titles.empty() && selected_task < task_titles.size()) {
+        
+        // Извлечение названия задачи и колонок из форматированной строки
+        std::string full_task_name = task_titles[selected_task];
+        size_t pos = full_task_name.find(" (");
+        if (pos != std::string::npos) {
+            std::string task_title_only = full_task_name.substr(0, pos);
+            std::string source_col = column_names[selected_source_column];
+            std::string dest_col = column_names[selected_destination_column];
+            
+            try {
+                // Поиск задачи и колонок
+                ::Task* task_ptr = search_task(*board, source_col, task_title_only);
+                Column* source_column = board->find_column(source_col);
+                Column* dest_column = board->find_column(dest_col);
+                
+                // Перемещение задачи
+                if (source_column && dest_column && task_ptr) {
+                    move_task(source_column, dest_column, task_ptr);
+                    refresh_ui_data();
+                    std::cout << "Task moved successfully!" << std::endl;
+                }
+            } catch (const std::exception& e) {
+                std::cout << "Error moving task: " << e.what() << std::endl;
+            }
+        }
+    }
+}
+
+// Обработчик удаления задачи
+void ScrumBoardUI::handle_delete_task() {
+    if (!task_titles.empty() && selected_task < task_titles.size()) {
+        std::string full_task_name = task_titles[selected_task];
+        size_t pos = full_task_name.find(" (");
+        if (pos != std::string::npos) {
+            // Извлечение названия задачи и колонки
+            std::string task_title_only = full_task_name.substr(0, pos);
+            std::string task_col = full_task_name.substr(pos + 2);
+            task_col.pop_back(); // Удаление закрывающей скобки
+            
+            // Поиск колонки и удаление задачи
+            Column* column = board->find_column(task_col);
+            if (column) {
+                try {
+                    column->delete_task(task_title_only);
+                    refresh_ui_data();
+                    std::cout << "Task deleted successfully!" << std::endl;
+                } catch (const std::exception& e) {
+                    std::cout << "Error deleting task: " << e.what() << std::endl;
+                }
+            }
+        }
+    }
+}
+
+// Обработчик добавления разработчика
+void ScrumBoardUI::handle_add_developer() {
+    if (!developer_name.empty()) {
+        try {
+            create_developer(*board, developer_name);
+            developer_name.clear();
+            refresh_ui_data();
+            std::cout << "Developer added successfully!" << std::endl;
+        } catch (const std::exception& e) {
+            std::cout << "Error adding developer: " << e.what() << std::endl;
+        }
+    }
+}
+
+// Обработчик удаления разработчика
+void ScrumBoardUI::handle_delete_developer() {
+    if (!developer_names.empty() && selected_developer < developer_names.size()) {
+        std::string dev_name = developer_names[selected_developer];
+        
+        Developer* developer = board->find_developer(dev_name);
+        if (developer) {
+            try {
+                // Удаление разработчика из всех задач
+                for (const auto& col : board->get_columns()) {
+                    for (const auto& task : col->get_tasks()) {
+                        if (task->get_developer() == developer) {
+                            task->set_developer(nullptr);
+                        }
+                    }
+                }
+                
+                // Удаление разработчика из доски
+                auto& developers = board->get_developers();
+                auto it = std::find_if(developers.begin(), developers.end(),
+                    [&](const std::unique_ptr<Developer>& dev) {
+                        return dev.get() == developer;
+                    });
+                
+                if (it != developers.end()) {
+                    developers.erase(it);
+                    refresh_ui_data();
+                    std::cout << "Developer deleted successfully!" << std::endl;
+                }
+            } catch (const std::exception& e) {
+                std::cout << "Error deleting developer: " << e.what() << std::endl;
+            }
+        }
+    }
+}
+
+// Обработчик назначения разработчика на задачу
+void ScrumBoardUI::handle_assign_developer() {
+    if (!task_titles.empty() && !developer_names.empty() && 
+        selected_task < task_titles.size() && selected_developer < developer_names.size()) {
+        
+        std::string full_task_name = task_titles[selected_task];
+        size_t pos = full_task_name.find(" (");
+        if (pos != std::string::npos) {
+            // Извлечение названия задачи и колонки
+            std::string task_title_only = full_task_name.substr(0, pos);
+            std::string task_col = full_task_name.substr(pos + 2);
+            task_col.pop_back();
+            
+            std::string dev_name = developer_names[selected_developer];
+            
+            try {
+                // Поиск задачи и разработчика
+                ::Task* task_ptr = search_task(*board, task_col, task_title_only);
+                Developer* developer = board->find_developer(dev_name);
+                
+                // Назначение разработчика на задачу
+                if (developer && task_ptr) {
+                    task_ptr->set_developer(developer);
+                    refresh_ui_data();
+                    std::cout << "Developer assigned successfully!" << std::endl;
+                }
+            } catch (const std::exception& e) {
+                std::cout << "Error assigning developer: " << e.what() << std::endl;
+            }
+        }
+    }
+}
+
+// Обработчик диалога сохранения/загрузки доски
+void ScrumBoardUI::handle_save_load_dialog(bool is_save, const std::string& new_file_name, int selected_file) {
+    if (!file_path_input_str.empty()) {
+        std::filesystem::path full_path;
+        
+        // Формирование полного пути к файлу
+        if (!new_file_name.empty()) {
+            full_path = std::filesystem::path(file_path_input_str) / new_file_name;
+            if (full_path.extension() != ".json") {
+                full_path += ".json";
+            }
+        } else if (!json_files.empty() && selected_file < json_files.size()) {
+            full_path = std::filesystem::path(file_path_input_str) / json_files[selected_file];
+        } else {
+            full_path = file_path_input_str;
+            if (full_path.extension() != ".json") {
+                full_path += ".json";
+            }
+        }
+        
+        // Создание директорий если необходимо
+        std::filesystem::path parent_dir = full_path.parent_path();
+        if (!parent_dir.empty() && !std::filesystem::exists(parent_dir)) {
+            try {
+                std::filesystem::create_directories(parent_dir);
+                std::cout << "Created directory: " << parent_dir.string() << std::endl;
+            } catch (const std::exception& e) {
+                std::cout << "Error creating directory: " << e.what() << std::endl;
+                return;
+            }
+        }
+        
+        if (is_save) {
+            // Логика сохранения доски
+            bool file_exists = std::filesystem::exists(full_path);
+            
+            if (file_exists) {
+                std::cout << "File already exists. Overwriting: " << full_path.string() << std::endl;
+            } else {
+                std::cout << "Creating new file: " << full_path.string() << std::endl;
+            }
+            
+            try {
+                // Сбор ID всех задач для сохранения
+                std::vector<std::string> current_ids;
+                for (const auto& col : board->get_columns()) {
+                    for (const auto& task : col->get_tasks()) {
+                        current_ids.push_back(task->get_id());
+                    }
+                }
+                
+                // Сохранение доски через JSON worker
+                json_worker = std::make_shared<Json_worker>(full_path.string());
+                json_worker->clear_ids();
+                json_worker->board_add(*board, json_worker->ids_add(current_ids));
+                json_worker->save();
+                save_path = full_path.string();
+                
+                // Установка имени доски из имени файла
+                std::string board_name = full_path.stem().string();
+                board->set_name(board_name);
+                
+                std::cout << "Board successfully saved to: " << full_path.string() << std::endl;
+                std::cout << "Board name set to: " << board_name << std::endl;
+                
+                // Проверка существования файла
+                if (std::filesystem::exists(full_path)) {
+                    std::cout << "File verified: " << full_path.string() << std::endl;
+                } else {
+                    std::cout << "Warning: File may not have been created: " << full_path.string() << std::endl;
+                }
+            } catch (const std::exception& e) {
+                std::cout << "Error saving board: " << e.what() << std::endl;
+                return;
+            }
+        } else {
+            // Логика загрузки доски
+            if (!std::filesystem::exists(full_path)) {
+                std::cout << "Error: File does not exist: " << full_path.string() << std::endl;
+                return;
+            }
+            
+            // Проверка валидности файла
+            Json_worker temp_worker(full_path.string());
+            if (!temp_worker.is_valid_board_file(full_path.string())) {
+                std::cout << "Error: Invalid board file format: " << full_path.string() << std::endl;
+                return;
+            }
+            
+            try {
+                json_worker = std::make_shared<Json_worker>(full_path.string());
+                
+                // Установка имени доски из имени файла
+                std::string board_name = full_path.stem().string();
+                
+                // Загрузка доски
+                json_worker->board_load(*board);
+                
+                // Установка имени доски
+                board->set_name(board_name);
+                
+                // Инициализация и обновление UI
+                initialize_board();
+                refresh_ui_data();
+                save_path = full_path.string();
+                std::cout << "Board successfully loaded from: " << full_path.string() << std::endl;
+                std::cout << "Board name set to: " << board_name << std::endl;
+            } catch (const std::exception& e) {
+                std::cout << "Error loading board: " << e.what() << std::endl;
+                return;
+            }
+        }
+    }
+}
+
+// Отрисовка доски в виде колонок с задачами
 Element ScrumBoardUI::render_board() {
     Elements column_elements;
     
-    for (auto* column : board->get_columns()) {
+    // Отрисовка каждой колонки
+    for (const auto& column : board->get_columns()) {
         Elements task_elements;
+        
+        // Заголовок колонки
         task_elements.push_back(text(column->get_name()) | bold | center);
         task_elements.push_back(separator());
         
-        auto tasks = column->get_tasks();
+        auto& tasks = column->get_tasks();
         if (tasks.empty()) {
-            task_elements.push_back(text("No tasks") | center | color(Color::GrayDark));
+            // Сообщение для пустой колонки
+            task_elements.push_back(
+                text("No tasks") | center | size(HEIGHT, EQUAL, 3)
+            );
         } else {
-            for (auto* task : tasks) {
+            // Отрисовка каждой задачи в колонке
+            for (const auto& task : tasks) {
                 std::string developer_name = "Unassigned";
                 if (task->get_developer()) {
                     try {
@@ -171,74 +477,46 @@ Element ScrumBoardUI::render_board() {
                     }
                 }
                 
+                // Создание элемента задачи с иконками и информацией
                 auto task_element = vbox({
-                    text("📝 " + task->get_title()) | bold,
-                    text("📋 " + task->get_description()),
-                    text("🎯 Priority: " + std::to_string(task->get_prioriy())),
-                    text("👨 " + developer_name),
-                    separator()
-                }) | border | flex;
+                    text("📝 " + task->get_title()) | bold,                    // Иконка и заголовок
+                    separator(),
+                    text("📋 " + (task->get_description().empty() ? "No description" : task->get_description())), // Описание
+                    text("🎯 Priority: " + std::to_string(task->get_priority())), // Приоритет
+                    text("👨 " + developer_name)                               // Разработчик
+                }) | border | flex | size(WIDTH, EQUAL, 25) | size(HEIGHT, EQUAL, 8);
                 
                 task_elements.push_back(task_element);
+                task_elements.push_back(filler()); // Заполнитель для spacing
             }
         }
         
-        auto column_element = vbox(std::move(task_elements)) | border | flex;
+        // Создание элемента колонки
+        auto column_element = vbox(std::move(task_elements)) | border | flex | frame | vscroll_indicator;
         column_elements.push_back(column_element);
     }
     
+    // Компоновка всех колонок в горизонтальный layout
     return vbox({
-        text("SCRUM Board - " + board->get_name()) | bold | hcenter,
+        text("SCRUM Board - " + board->get_name()) | bold | hcenter, // Заголовок доски
         separator(),
-        hbox(std::move(column_elements)) | flex
+        hbox(std::move(column_elements)) | flex // Горизонтальное расположение колонок
     });
 }
 
+// Основной метод запуска приложения
 void ScrumBoardUI::run() {
+    // Создание интерактивного экрана
     auto screen = ScreenInteractive::Fullscreen();
     
-    // Используем int для управления активным компонентом 
-    // 0 - главный интерфейс, 1 - диалог загрузки/сохранения, 2 - стартовый диалог
-    int active_component = 2; // По умолчанию показываем стартовый диалог
+    // Переменные состояния UI
+    int active_component = 2;
     bool is_save_dialog = false;
-    
-    // Локальные переменные для диалога
     std::string new_file_name;
     
-    // Создаем кнопки с поддержкой мыши
+    // Создание кнопок с обработчиками
     auto create_task_btn = Button("Create Task", [this] {
-        if (!task_title.empty()) {
-            std::string column_name = column_names[selected_column];
-            std::cout << "Creating task: " << task_title << " in column: " << column_name << std::endl;
-            
-            create_task(*board, column_name, task_title);
-            
-            try {
-                ::Task* task = search_task(*board, column_name, task_title);
-                if (task) {
-                    task->set_description(task_description);
-                    
-                    if (!task_priority_str.empty()) {
-                        try {
-                            int priority = std::stoi(task_priority_str);
-                            task->set_priority(std::max(0, std::min(10, priority)));
-                        } catch (const std::exception& e) {
-                            task->set_priority(0);
-                        }
-                    }
-                    std::cout << "Task created successfully!" << std::endl;
-                }
-            } catch (const std::out_of_range& e) {
-                std::cout << "Error: Task not found after creation" << std::endl;
-            }
-            
-            task_title.clear();
-            task_description.clear();
-            task_priority_str.clear();
-            refresh_ui_data();
-        } else {
-            std::cout << "Error: Task title cannot be empty" << std::endl;
-        }
+        handle_create_task();
     }, ButtonOption::Animated());
 
     auto clear_task_btn = Button("Clear", [this] {
@@ -247,155 +525,26 @@ void ScrumBoardUI::run() {
         task_priority_str.clear();
     }, ButtonOption::Animated());
 
-    auto add_dev_btn = Button("Add Developer", [this] {
-        if (!developer_name.empty()) {
-            create_developer(*board, developer_name);
-            developer_name.clear();
-            refresh_ui_data();
-            std::cout << "Developer added successfully!" << std::endl;
-        }
-    }, ButtonOption::Animated());
-
-    auto delete_dev_btn = Button("Delete Developer", [this] {
-        if (!developer_names.empty() && selected_developer < developer_names.size()) {
-            std::string dev_name = developer_names[selected_developer];
-            bool found = false;
-            
-            auto developers = board->get_developer();
-            for (auto* dev : developers) {
-                if (dev->get_name() == dev_name) {
-                    for (auto* col : board->get_columns()) {
-                        for (auto* task : col->get_tasks()) {
-                            if (task->get_developer() == dev) {
-                                task->set_developer(nullptr);
-                            }
-                        }
-                    }
-                    
-                    board->delete_developer(dev);
-                    delete dev;
-                    found = true;
-                    break;
-                }
-            }
-            
-            if (found) {
-                refresh_ui_data(); 
-                std::cout << "Developer deleted successfully!" << std::endl;
-            }
-        }
-    }, ButtonOption::Animated());
-
     auto move_task_btn = Button("Move Task", [this] {
-        if (selected_source_column != selected_destination_column && 
-            !task_titles.empty() && selected_task < task_titles.size()) {
-            
-            std::string full_task_name = task_titles[selected_task];
-            size_t pos = full_task_name.find(" (");
-            if (pos != std::string::npos) {
-                std::string task_title_only = full_task_name.substr(0, pos);
-                std::string source_col = column_names[selected_source_column];
-                std::string dest_col = column_names[selected_destination_column];
-                
-                try {
-                    ::Task* task = search_task(*board, source_col, task_title_only);
-                    Column* source_column = nullptr;
-                    Column* dest_column = nullptr;
-                    
-                    for (auto* col : board->get_columns()) {
-                        if (col->get_name() == source_col) source_column = col;
-                        if (col->get_name() == dest_col) dest_column = col;
-                    }
-                    
-                    if (source_column && dest_column && task) {
-                        move_task(source_column, dest_column, task);
-                        refresh_ui_data(); // Только обновляем данные
-                        std::cout << "Task moved successfully!" << std::endl;
-                    }
-                } catch (const std::out_of_range& e) {
-                    std::cout << "Error: Task not found" << std::endl;
-                }
-            }
-        }
+        handle_move_task();
     }, ButtonOption::Animated());
 
     auto delete_task_btn = Button("Delete Task", [this] {
-        if (!task_titles.empty() && selected_task < task_titles.size()) {
-            std::string full_task_name = task_titles[selected_task];
-            size_t pos = full_task_name.find(" (");
-            if (pos != std::string::npos) {
-                std::string task_title_only = full_task_name.substr(0, pos);
-                std::string task_col = full_task_name.substr(pos + 2);
-                task_col.pop_back();
-                
-                for (auto* col : board->get_columns()) {
-                    if (col->get_name() == task_col) {
-                        try {
-                            ::Task* task = search_task(*board, task_col, task_title_only);
-                            if (task) {
-                                col->delete_task(task);
-                                delete task;
-                                refresh_ui_data(); 
-                                std::cout << "Task deleted successfully!" << std::endl;
-                                break;
-                            }
-                        } catch (const std::out_of_range& e) {
-                            std::cout << "Error: Task not found" << std::endl;
-                        }
-                    }
-                }
-            }
-        }
-    }, ButtonOption::Animated());
-
-    auto assign_dev_btn = Button("Assign Developer", [this] {
-        if (!task_titles.empty() && !developer_names.empty() && 
-            selected_task < task_titles.size() && selected_developer < developer_names.size()) {
-            
-            std::string full_task_name = task_titles[selected_task];
-            size_t pos = full_task_name.find(" (");
-            if (pos != std::string::npos) {
-                std::string task_title_only = full_task_name.substr(0, pos);
-                std::string task_col = full_task_name.substr(pos + 2);
-                task_col.pop_back();
-                
-                std::string dev_name = developer_names[selected_developer];
-                
-                try {
-                    ::Task* task = search_task(*board, task_col, task_title_only);
-                    Developer* developer = nullptr;
-                    
-                    for (auto* dev : board->get_developer()) {
-                        if (dev->get_name() == dev_name) {
-                            developer = dev;
-                            break;
-                        }
-                    }
-                    
-                    if (developer && task) {
-                        task->set_developer(developer);
-                        refresh_ui_data(); 
-                        std::cout << "Developer assigned successfully!" << std::endl;
-                    }
-                } catch (const std::out_of_range& e) {
-                    std::cout << "Error: Task not found" << std::endl;
-                }
-            }
-        }
+        handle_delete_task();
     }, ButtonOption::Animated());
 
     auto save_btn = Button("Save Board", [&] {
-    previous_component = active_component; // Сохраняем текущее состояние
-    active_component = 1; // Переключаемся на диалог
-    is_save_dialog = true;
-    file_path_input_str = std::filesystem::current_path().string();
-    new_file_name.clear();
-    update_file_list();
+        previous_component = active_component;
+        active_component = 1;
+        is_save_dialog = true;
+        file_path_input_str = std::filesystem::current_path().string();
+        new_file_name.clear();
+        update_file_list();
     }, ButtonOption::Animated());
 
     auto load_btn = Button("Load Board", [&] {
-        previous_component = active_component; // Сохраняем текущее состояние
-        active_component = 1; // Переключаемся на диалог
+        previous_component = active_component;
+        active_component = 1;
         is_save_dialog = false;
         file_path_input_str = std::filesystem::current_path().string();
         new_file_name.clear();
@@ -406,22 +555,23 @@ void ScrumBoardUI::run() {
         screen.Exit(); 
     }, ButtonOption::Animated());
 
-    // Кнопки для стартового диалога
     auto new_board_btn = Button("Create New Board", [&] {
-        // Оставляем текущую пустую доску
-        active_component = 0; // Переходим к главному интерфейсу
+        board = std::make_shared<Board>("ScrumBoard");
+        initialize_board();
+        active_component = 0;
         std::cout << "Created new empty board" << std::endl;
     }, ButtonOption::Animated());
 
     auto load_existing_btn = Button("Load Existing Board", [&] {
-    previous_component = active_component; // Сохраняем текущее состояние (2 - стартовое меню)
-    active_component = 1; // Переходим к диалогу загрузки
-    is_save_dialog = false;
-    file_path_input_str = std::filesystem::current_path().string();
-    new_file_name.clear();
-    update_file_list();
+        previous_component = active_component;
+        active_component = 1;
+        is_save_dialog = false;
+        file_path_input_str = std::filesystem::current_path().string();
+        new_file_name.clear();
+        update_file_list();
     }, ButtonOption::Animated());
 
+    // Компоновка компонентов в контейнеры
     auto task_creation_buttons = Container::Horizontal({
         create_task_btn,
         clear_task_btn
@@ -436,42 +586,11 @@ void ScrumBoardUI::run() {
     });
 
     auto dev_creation_add_btn = Button("Add Developer", [this] {
-        if (!developer_name.empty()) {
-            create_developer(*board, developer_name);
-            developer_name.clear();
-            refresh_ui_data(); 
-            std::cout << "Developer added successfully!" << std::endl;
-        }
+        handle_add_developer();
     }, ButtonOption::Animated());
 
     auto dev_creation_delete_btn = Button("Delete Developer", [this] {
-        if (!developer_names.empty() && selected_developer < developer_names.size()) {
-            std::string dev_name = developer_names[selected_developer];
-            bool found = false;
-            
-            auto developers = board->get_developer();
-            for (auto* dev : developers) {
-                if (dev->get_name() == dev_name) {
-                    for (auto* col : board->get_columns()) {
-                        for (auto* task : col->get_tasks()) {
-                            if (task->get_developer() == dev) {
-                                task->set_developer(nullptr);
-                            }
-                        }
-                    }
-                    
-                    board->delete_developer(dev);
-                    delete dev;
-                    found = true;
-                    break;
-                }
-            }
-            
-            if (found) {
-                refresh_ui_data();
-                std::cout << "Developer deleted successfully!" << std::endl;
-            }
-        }
+        handle_delete_developer();
     }, ButtonOption::Animated());
 
     auto developer_creation_buttons = Container::Horizontal({
@@ -486,7 +605,6 @@ void ScrumBoardUI::run() {
         developer_creation_selection,
         developer_creation_buttons
     });
-
     
     auto task_management_buttons = Container::Horizontal({
         move_task_btn,
@@ -499,42 +617,9 @@ void ScrumBoardUI::run() {
         task_selection,
         task_management_buttons
     });
-
     
     auto dev_assignment_btn = Button("Assign Developer", [this] {
-        if (!task_titles.empty() && !developer_names.empty() && 
-            selected_task < task_titles.size() && selected_developer < developer_names.size()) {
-            
-            std::string full_task_name = task_titles[selected_task];
-            size_t pos = full_task_name.find(" (");
-            if (pos != std::string::npos) {
-                std::string task_title_only = full_task_name.substr(0, pos);
-                std::string task_col = full_task_name.substr(pos + 2);
-                task_col.pop_back();
-                
-                std::string dev_name = developer_names[selected_developer];
-                
-                try {
-                    ::Task* task = search_task(*board, task_col, task_title_only);
-                    Developer* developer = nullptr;
-                    
-                    for (auto* dev : board->get_developer()) {
-                        if (dev->get_name() == dev_name) {
-                            developer = dev;
-                            break;
-                        }
-                    }
-                    
-                    if (developer && task) {
-                        task->set_developer(developer);
-                        refresh_ui_data(); 
-                        std::cout << "Developer assigned successfully!" << std::endl;
-                    }
-                } catch (const std::out_of_range& e) {
-                    std::cout << "Error: Task not found" << std::endl;
-                }
-            }
-        }
+        handle_assign_developer();
     }, ButtonOption::Animated());
 
     auto dev_assignment_task_selection = Radiobox(&task_titles, &selected_task);
@@ -545,7 +630,6 @@ void ScrumBoardUI::run() {
         dev_assignment_developer_selection,
         dev_assignment_btn
     });
-
   
     auto control_buttons = Container::Horizontal({
         save_btn,
@@ -553,133 +637,32 @@ void ScrumBoardUI::run() {
         exit_btn
     });
 
-    // Диалоговые кнопки для файлового диалога
     auto refresh_dialog_btn = Button("Refresh", [this] {
         update_file_list();
     }, ButtonOption::Animated());
 
-    // Компонент для ввода нового имени файла
     auto new_file_name_input_component = Input(&new_file_name, "Enter new file name");
 
     auto confirm_dialog_btn = Button(is_save_dialog ? "Save" : "Load", [&] {
-        if (!file_path_input_str.empty()) {
-            std::filesystem::path full_path;
-            
-            // Если указано имя нового файла, используем его
-            if (!new_file_name.empty()) {
-                full_path = std::filesystem::path(file_path_input_str) / new_file_name;
-                if (full_path.extension() != ".json") {
-                    full_path += ".json";
-                }
-            }
-            // Иначе используем выбранный файл из списка
-            else if (!json_files.empty() && selected_file < json_files.size()) {
-                full_path = std::filesystem::path(file_path_input_str) / json_files[selected_file];
-            }
-            // Иначе используем введенный путь как есть
-            else {
-                full_path = file_path_input_str;
-                if (full_path.extension() != ".json") {
-                    full_path += ".json";
-                }
-            }
-            
-            // Создаем директорию, если она не существует
-            std::filesystem::path parent_dir = full_path.parent_path();
-            if (!parent_dir.empty() && !std::filesystem::exists(parent_dir)) {
-                try {
-                    std::filesystem::create_directories(parent_dir);
-                    std::cout << "Created directory: " << parent_dir.string() << std::endl;
-                } catch (const std::exception& e) {
-                    std::cout << "Error creating directory: " << e.what() << std::endl;
-                    return;
-                }
-            }
-            
-            if (is_save_dialog) {
-                // Проверяем, существует ли файл
-                bool file_exists = std::filesystem::exists(full_path);
-                
-                // Если файл существует, спрашиваем подтверждение перезаписи
-                if (file_exists) {
-                    std::cout << "File already exists. Overwriting: " << full_path.string() << std::endl;
-                } else {
-                    std::cout << "Creating new file: " << full_path.string() << std::endl;
-                }
-                
-                try {
-                    std::vector<std::string> current_ids;
-                    for (Column* col : board->get_columns()) {
-                        for (::Task* task : col->get_tasks()) {
-                            current_ids.push_back(task->get_id());
-                        }
-                    }
-                    
-                    json_worker = std::make_shared<Json_worker>(full_path.string());
-                    json_worker->clear_ids();
-                    json_worker->board_add(*board, json_worker->ids_add(current_ids));
-                    json_worker->save();
-                    save_path = full_path.string();
-                    std::cout << "Board successfully saved to: " << full_path.string() << std::endl;
-                    
-                    // Проверяем, что файл действительно создался
-                    if (std::filesystem::exists(full_path)) {
-                        std::cout << "File verified: " << full_path.string() << std::endl;
-                    } else {
-                        std::cout << "Warning: File may not have been created: " << full_path.string() << std::endl;
-                    }
-                } catch (const std::exception& e) {
-                    std::cout << "Error saving board: " << e.what() << std::endl;
-                    return;
-                }
-            } else {
-            // ДЛЯ ЗАГРУЗКИ: проверяем валидность файла
-            if (!std::filesystem::exists(full_path)) {
-                std::cout << "Error: File does not exist: " << full_path.string() << std::endl;
-                return;
-            }
-            
-            // Проверяем формат файла перед загрузкой
-            Json_worker temp_worker(full_path.string());
-            if (!temp_worker.is_valid_board_file(full_path.string())) {
-                std::cout << "Error: Invalid board file format: " << full_path.string() << std::endl;
-                return;
-            }
-            
-            try {
-                json_worker = std::make_shared<Json_worker>(full_path.string());
-                json_worker->board_load(*board);
-                initialize_board(); // Переинициализируем доску
-                refresh_ui_data(); // ОБНОВЛЯЕМ ДАННЫЕ БЕЗ ПЕРЕСОЗДАНИЯ КОМПОНЕНТОВ
-                save_path = full_path.string();
-                std::cout << "Board successfully loaded from: " << full_path.string() << std::endl;
-            } catch (const std::exception& e) {
-                std::cout << "Error loading board: " << e.what() << std::endl;
-                return;
-            }
-        }
-        
-        active_component = 0; // Возвращаемся к главному интерфейсу
+        handle_save_load_dialog(is_save_dialog, new_file_name, selected_file);
+        active_component = 0;
         new_file_name.clear();
-    }
-}, ButtonOption::Animated());
+    }, ButtonOption::Animated());
 
     auto cancel_dialog_btn = Button("Cancel", [&] {
-    // Возвращаемся к предыдущему состоянию
-    active_component = previous_component;
-    new_file_name.clear();
-    file_path_input_str.clear();
-    json_files.clear();
+        active_component = previous_component;
+        new_file_name.clear();
+        file_path_input_str.clear();
+        json_files.clear();
     }, ButtonOption::Animated());
+    
     auto create_new_file_btn = Button("Create New", [&] {
-        // Активируем поле ввода нового файла
         if (!new_file_name.empty()) {
             std::filesystem::path full_path = std::filesystem::path(file_path_input_str) / new_file_name;
             if (full_path.extension() != ".json") {
                 full_path += ".json";
             }
             
-            // Проверяем, не существует ли уже файл с таким именем
             if (std::filesystem::exists(full_path)) {
                 std::cout << "File already exists: " << full_path.string() << std::endl;
             } else {
@@ -688,7 +671,6 @@ void ScrumBoardUI::run() {
         }
     }, ButtonOption::Animated());
 
-    // Файловый диалог как отдельный компонент
     auto file_dialog_buttons = Container::Horizontal({
         confirm_dialog_btn,
         cancel_dialog_btn,
@@ -703,6 +685,7 @@ void ScrumBoardUI::run() {
         file_dialog_buttons
     });
 
+    // Рендереры для разных состояний UI
     auto file_dialog_renderer = Renderer(file_dialog_component, [&] {
         Elements elements;
         
@@ -710,11 +693,9 @@ void ScrumBoardUI::run() {
         elements.push_back(text(dialog_title) | bold | hcenter);
         elements.push_back(separator());
         
-        // Поле ввода пути
         elements.push_back(hbox({text("Path: "), file_path_input->Render()}));
         elements.push_back(separator());
         
-        // Список существующих файлов
         if (json_files.empty()) {
             elements.push_back(text("No JSON files found") | center | color(Color::GrayDark));
         } else {
@@ -724,7 +705,6 @@ void ScrumBoardUI::run() {
         
         elements.push_back(separator());
         
-        // Секция создания нового файла (только для сохранения)
         if (is_save_dialog) {
             elements.push_back(text("Create New File:") | bold);
             elements.push_back(hbox({text("File name: "), new_file_name_input_component->Render()}));
@@ -742,7 +722,6 @@ void ScrumBoardUI::run() {
         return vbox(elements) | border | center;
     });
 
-    // Стартовый диалог
     auto startup_buttons = Container::Horizontal({
         new_board_btn,
         load_existing_btn
@@ -755,9 +734,9 @@ void ScrumBoardUI::run() {
     auto startup_renderer = Renderer(startup_component, [&] {
         Elements elements;
         
-        elements.push_back(text("SCRUM Board Manager") | bold | hcenter);
+        elements.push_back(text("SCRUM Board") | bold | hcenter);
         elements.push_back(separator());
-        elements.push_back(text("Welcome to SCRUM Board Manager!") | center);
+        elements.push_back(text("Welcome to SCRUM Board!") | center);
         elements.push_back(separator());
         elements.push_back(text("Choose an option:") | center);
         elements.push_back(separator());
@@ -766,7 +745,6 @@ void ScrumBoardUI::run() {
         return vbox(elements) | border | center;
     });
 
-    // Создаем рендереры для каждой вкладки
     auto board_renderer = Renderer([this] { 
         return render_board(); 
     });
@@ -836,8 +814,7 @@ void ScrumBoardUI::run() {
         return vbox(elements) | border;
     });
 
-    // Создаем табы для разных функций 
-    // Первая вкладка - доска, остальные - функции управления
+    // Создание системы вкладок
     std::vector<Component> tab_content_components = {
         board_renderer,
         task_creation_renderer,
@@ -858,7 +835,7 @@ void ScrumBoardUI::run() {
     
     auto tab_selection = Toggle(&tab_entries, &current_tab);
     
-    // Главный компонент
+    // Основной компонент приложения
     auto main_component = Container::Vertical({
         tab_selection,
         tab_container,
@@ -867,7 +844,7 @@ void ScrumBoardUI::run() {
 
     auto main_renderer = Renderer(main_component, [&] {
         return vbox({
-            text("SCRUM Board Manager") | bold | hcenter,
+            text("SCRUM Board") | bold | hcenter,
             separator(),
             tab_selection->Render(),
             tab_container->Render() | flex,
@@ -876,8 +853,7 @@ void ScrumBoardUI::run() {
         });
     });
     
-    // Создаем общий контейнер который переключается между состояниями
-    // Используем отдельные контейнеры для каждого состояния чтобы сохранить активность
+    // Финальная компоновка всех компонентов
     auto main_state_component = Container::Vertical({
         main_component
     });
@@ -890,14 +866,13 @@ void ScrumBoardUI::run() {
         startup_component
     });
     
-    // Собираем все состояния в один контейнер
     auto final_component = Container::Vertical({
         main_state_component,
         file_dialog_state_component, 
         startup_state_component
     });
     
-    // Рендерер который переключает между состояниями
+    // Финальный рендерер с переключением между состояниями
     auto final_renderer = Renderer(final_component, [&] {
         if (active_component == 0) {
             return main_renderer->Render();
@@ -908,5 +883,6 @@ void ScrumBoardUI::run() {
         }
     });
     
+    // Запуск основного цикла приложения
     screen.Loop(final_renderer);
 }

@@ -33,14 +33,12 @@
 
 - **C++ компилятор** с поддержкой C++17 
 - **CMake** 3.14 или выше
-- **Библиотека FTXUI**
-- **RapidJSON**
 
 ### Сборка проекта
 
 ```bash
 # Клонирование репозитория
-git clone <repository-url>
+git clone https://github.com/LehaKrechet/text_scrum_board.git
 cd scrum-board
 
 # Создание директории для сборки
@@ -65,13 +63,7 @@ make
 ```bash
 sudo apt update
 
-sudo apt install build-essential cmake librapidjson-dev
-
-git clone https://github.com/ArthurSonzogni/FTXUI
-cd FTXUI
-cmake -B build -S . -DBUILD_SHARED_LIBS=ON
-cmake --build build
-sudo cmake --install build
+sudo apt install cmake 
 ```
 
 ## 🎮 Использование
@@ -106,7 +98,7 @@ sudo cmake --install build
 
 
 ### Поддерживаемые платформы:
-- ✅ **Linux** (Ubuntu, Debian, CentOS)
+- ✅ **Linux** (Ubuntu, Debian)
 - ✅ **Windows**
 
 

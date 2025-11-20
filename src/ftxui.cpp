@@ -8,6 +8,17 @@
 
 using namespace ftxui;
 
+// Метод для создания стилизованных компонентов ввода
+Component ScrumBoardUI::create_styled_input(std::string* content, const std::string& placeholder) {
+    auto input = Input(content, placeholder);
+    
+    return Renderer(input, [input, this] {
+        return input->Render() 
+            | bgcolor(ftxui::Color::GrayDark);
+    });
+
+}
+
 // Обновление данных пользовательского интерфейса
 // Вызывает все методы обновления для синхронизации UI с данными
 void ScrumBoardUI::refresh_ui_data() {
@@ -153,22 +164,36 @@ void ScrumBoardUI::update_file_list() {
 // Настройка всех компонентов пользовательского интерфейса
 // Создает и настраивает все элементы управления FTXUI
 void ScrumBoardUI::setup_ui_components() {
-    // Создание компонентов ввода
-    // Input компоненты позволяют пользователю вводить текст
-    task_title_input = Input(&task_title, "Enter task title");
-    task_description_input = Input(&task_description, "Enter task description");
-    task_priority_input = Input(&task_priority_str, "Enter task priority (0-10)");
-    developer_name_input = Input(&developer_name, "Enter developer name");
-    file_path_input = Input(&file_path_input_str, "Enter file path");
+    // Создание стилизованных компонентов ввода с адаптивным цветом
+    task_title_input = create_styled_input(&task_title, "Enter task title");
+    task_description_input = create_styled_input(&task_description, "Enter task description");
+    task_priority_input = create_styled_input(&task_priority_str, "Enter task priority (0-10)");
+    developer_name_input = create_styled_input(&developer_name, "Enter developer name");
+    file_path_input = create_styled_input(&file_path_input_str, "Enter file path");
     
     // Создание компонентов выбора
     // Radiobox компоненты позволяют выбирать из списка вариантов
+    // Стилизуем их также для адаптивного цвета
     column_selection = Radiobox(&column_names, &selected_column);
     source_column_selection = Radiobox(&column_names, &selected_source_column);
     destination_column_selection = Radiobox(&column_names, &selected_destination_column);
     task_selection = Radiobox(&task_titles, &selected_task);
     developer_selection = Radiobox(&developer_names, &selected_developer);
     file_list_selection = Radiobox(&json_files, &selected_file);
+    
+    // Стилизация компонентов выбора
+    auto style_radiobox = [](Component radiobox) {
+        return Renderer(radiobox, [radiobox] {
+            return radiobox->Render() | color(Color::Default);
+        });
+    };
+    
+    column_selection = style_radiobox(column_selection);
+    source_column_selection = style_radiobox(source_column_selection);
+    destination_column_selection = style_radiobox(destination_column_selection);
+    task_selection = style_radiobox(task_selection);
+    developer_selection = style_radiobox(developer_selection);
+    file_list_selection = style_radiobox(file_list_selection);
 }
 
 // Обработчик создания новой задачи
@@ -518,13 +543,14 @@ void ScrumBoardUI::handle_save_load_dialog(bool is_save, const std::string& new_
 // Создает визуальное представление Scrum доски
 Element ScrumBoardUI::render_board() {
     Elements column_elements;
+    auto text_color = get_text_color();
     
     // Проходим по всем колонкам доски
     for (const auto& column : board->get_columns()) {
         Elements task_elements;
         
         // Заголовок колонки с названием
-        task_elements.push_back(text(column->get_name()) | bold | center);
+        task_elements.push_back(text(column->get_name()) | bold | center | color(text_color));
         // Разделительная линия под заголовком
         task_elements.push_back(separator());
         
@@ -532,7 +558,7 @@ Element ScrumBoardUI::render_board() {
         // Обработка пустой колонки
         if (tasks.empty()) {
             // Сообщение о отсутствии задач + занимает пространство
-            task_elements.push_back(text("No tasks") | center | flex | size(HEIGHT, EQUAL, 10));
+            task_elements.push_back(text("No tasks") | center | flex | size(HEIGHT, EQUAL, 10) | color(text_color));
         } else {
             int task_count = tasks.size();
             
@@ -568,17 +594,17 @@ Element ScrumBoardUI::render_board() {
                 Elements task_content;
                 
                 // ЗАГОЛОВОК ЗАДАЧИ - отображается всегда
-                task_content.push_back(text("📝 " + task->get_title()) | bold | center);
+                task_content.push_back(text("📝 " + task->get_title()) | bold | center | color(text_color));
                 
                 // УРОВЕНЬ 1+: Разработчик
                 if (detail_level >= 1 && task->get_developer()!=nullptr) {
                     task_content.push_back(separator()); // Разделитель
-                    task_content.push_back(text("👨 " + developer_name) | center);
+                    task_content.push_back(text("👨 " + developer_name) | center | color(text_color));
                 }
                 
                 // УРОВЕНЬ 2+: Приоритет
                 if (detail_level >= 2 && task->get_priority() != -1) {
-                    task_content.push_back(text("🎯 " + std::to_string(task->get_priority())) | center);
+                    task_content.push_back(text("🎯 " + std::to_string(task->get_priority())) | center | color(text_color));
                 }
                 
                 // УРОВЕНЬ 3+: Описание (если есть)
@@ -586,7 +612,7 @@ Element ScrumBoardUI::render_board() {
                     std::string desc = task->get_description();
                     // Обрезаем длинные описания
                     if (desc.length() > 20) desc = desc.substr(0, 17) + "...";
-                    task_content.push_back(text("📋 " + desc) | center);
+                    task_content.push_back(text("📋 " + desc) | center | color(text_color));
                 }
                 
                 // Создание элемента задачи
@@ -616,7 +642,7 @@ Element ScrumBoardUI::render_board() {
     // Простой и эффективный способ занять всю ширину
     return vbox({
         // Заголовок доски
-        text("SCRUM Board - " + board->get_name()) | bold | hcenter,
+        text("SCRUM Board - " + board->get_name()) | bold | hcenter | color(text_color),
         // Разделитель
         separator(),
         // Горизонтальное расположение колонок
@@ -627,6 +653,7 @@ Element ScrumBoardUI::render_board() {
     | flex   // Главный контейнер растягивается
     | xflex; // Занимает всю ширину терминала
 }
+
 // Основной метод запуска приложения
 // Создает UI и запускает главный цикл обработки событий
 void ScrumBoardUI::run() {
@@ -797,7 +824,7 @@ void ScrumBoardUI::run() {
     }, ButtonOption::Animated());
 
     // Поле ввода имени нового файла
-    auto new_file_name_input_component = Input(&new_file_name, "Enter new file name");
+    auto new_file_name_input_component = Input(&new_file_name, "Enter new file name") | bgcolor(ftxui::Color::GrayDark);
 
     // Кнопка подтверждения в диалоге (Сохранить/Загрузить)
     auto confirm_dialog_btn = Button(is_save_dialog ? "Save" : "Load", [&] {
@@ -854,21 +881,22 @@ void ScrumBoardUI::run() {
     // Рендерер для диалога файлов
     auto file_dialog_renderer = Renderer(file_dialog_component, [&] {
         Elements elements;
+        auto text_color = get_text_color();
         
         // Заголовок диалога в зависимости от режима
         std::string dialog_title = is_save_dialog ? "Save Board" : "Load Board";
-        elements.push_back(text(dialog_title) | bold | hcenter);
+        elements.push_back(text(dialog_title) | bold | hcenter | color(text_color));
         elements.push_back(separator());
         
         // Поле ввода пути
-        elements.push_back(hbox({text("Path: "), file_path_input->Render()}));
+        elements.push_back(hbox({text("Path: ") | color(text_color), file_path_input->Render()}));
         elements.push_back(separator());
         
         // Список файлов или сообщение если файлов нет
         if (json_files.empty()) {
             elements.push_back(text("No JSON files found") | center | color(Color::GrayDark));
         } else {
-            elements.push_back(text("Available JSON files:"));
+            elements.push_back(text("Available JSON files:") | color(text_color));
             elements.push_back(file_list_selection->Render() | frame | vscroll_indicator | flex);
         }
         
@@ -876,8 +904,8 @@ void ScrumBoardUI::run() {
         
         // Для режима сохранения - возможность создать новый файл
         if (is_save_dialog) {
-            elements.push_back(text("Create New File:") | bold);
-            elements.push_back(hbox({text("File name: "), new_file_name_input_component->Render()}));
+            elements.push_back(text("Create New File:") | bold | color(text_color));
+            elements.push_back(hbox({text("File name: ") | color(text_color), new_file_name_input_component->Render()}));
             elements.push_back(create_new_file_btn->Render() | center);
             elements.push_back(separator());
         }
@@ -885,7 +913,7 @@ void ScrumBoardUI::run() {
         // Отображение текущего выбора
         elements.push_back(text("Selection: " + (new_file_name.empty() ? 
             (json_files.empty() ? "No file selected" : json_files[selected_file]) : 
-            "New file: " + new_file_name)));
+            "New file: " + new_file_name)) | color(text_color));
         elements.push_back(separator());
         
         // Кнопки действий
@@ -908,12 +936,13 @@ void ScrumBoardUI::run() {
     // Рендерер для стартового экрана
     auto startup_renderer = Renderer(startup_component, [&] {
         Elements elements;
+        auto text_color = get_text_color();
         
-        elements.push_back(text("SCRUM Board") | bold | hcenter);
+        elements.push_back(text("SCRUM Board") | bold | hcenter | color(text_color));
         elements.push_back(separator());
-        elements.push_back(text("Welcome to SCRUM Board!") | center);
+        elements.push_back(text("Welcome to SCRUM Board!") | center | color(text_color));
         elements.push_back(separator());
-        elements.push_back(text("Choose an option:") | center);
+        elements.push_back(text("Choose an option:") | center | color(text_color));
         elements.push_back(separator());
         elements.push_back(startup_buttons->Render() | center);
         
@@ -928,12 +957,14 @@ void ScrumBoardUI::run() {
     // Рендерер для вкладки создания задач
     auto task_creation_renderer = Renderer(task_creation_tab, [this, task_creation_buttons] {
         Elements elements;
-        elements.push_back(text("Create New Task") | bold | hcenter);
+        auto text_color = get_text_color();
+        
+        elements.push_back(text("Create New Task") | bold | hcenter | color(text_color));
         elements.push_back(separator());
-        elements.push_back(hbox({text("Title: "), task_title_input->Render()}));
-        elements.push_back(hbox({text("Description: "), task_description_input->Render()}));
-        elements.push_back(hbox({text("Priority (0-10): "), task_priority_input->Render()}));
-        elements.push_back(text("Select Column:"));
+        elements.push_back(hbox({text("Title: ") | color(text_color), task_title_input->Render()}));
+        elements.push_back(hbox({text("Description: ") | color(text_color), task_description_input->Render()}));
+        elements.push_back(hbox({text("Priority (0-10): ") | color(text_color), task_priority_input->Render()}));
+        elements.push_back(text("Select Column:") | color(text_color));
         elements.push_back(column_selection->Render());
         elements.push_back(separator());
         elements.push_back(task_creation_buttons->Render() | center);
@@ -943,11 +974,13 @@ void ScrumBoardUI::run() {
     // Рендерер для вкладки управления разработчиками
     auto developer_creation_renderer = Renderer(developer_creation_tab, [this, developer_creation_buttons, developer_creation_selection] {
         Elements elements;
-        elements.push_back(text("Manage Developers") | bold | hcenter);
+        auto text_color = get_text_color();
+        
+        elements.push_back(text("Manage Developers") | bold | hcenter | color(text_color));
         elements.push_back(separator());
-        elements.push_back(hbox({text("Developer Name: "), developer_name_input->Render()}));
+        elements.push_back(hbox({text("Developer Name: ") | color(text_color), developer_name_input->Render()}));
         elements.push_back(separator());
-        elements.push_back(text("Current Developers:"));
+        elements.push_back(text("Current Developers:") | color(text_color));
         elements.push_back(developer_creation_selection->Render());
         elements.push_back(separator());
         elements.push_back(developer_creation_buttons->Render() | center);
@@ -957,15 +990,17 @@ void ScrumBoardUI::run() {
     // Рендерер для вкладки управления задачами
     auto task_management_renderer = Renderer(task_management_tab, [this, task_management_buttons] {
         Elements elements;
-        elements.push_back(text("Manage Tasks") | bold | hcenter);
+        auto text_color = get_text_color();
+        
+        elements.push_back(text("Manage Tasks") | bold | hcenter | color(text_color));
         elements.push_back(separator());
-        elements.push_back(text("Move Task Between Columns"));
+        elements.push_back(text("Move Task Between Columns") | color(text_color));
         elements.push_back(hbox({
-            vbox({text("From:"), source_column_selection->Render()}),
-            vbox({text("To:"), destination_column_selection->Render()})
+            vbox({text("From:") | color(text_color), source_column_selection->Render()}),
+            vbox({text("To:") | color(text_color), destination_column_selection->Render()})
         }));
         elements.push_back(separator());
-        elements.push_back(text("Available Tasks:"));
+        elements.push_back(text("Available Tasks:") | color(text_color));
         elements.push_back(task_selection->Render());
         elements.push_back(separator());
         elements.push_back(task_management_buttons->Render() | center);
@@ -975,17 +1010,19 @@ void ScrumBoardUI::run() {
     // Рендерер для вкладки назначения разработчиков
     auto developer_assignment_renderer = Renderer(developer_assignment_tab, [this, dev_assignment_btn, dev_assignment_task_selection, dev_assignment_developer_selection] {
         Elements elements;
-        elements.push_back(text("Assign Developer to Task") | bold | hcenter);
+        auto text_color = get_text_color();
+        
+        elements.push_back(text("Assign Developer to Task") | bold | hcenter | color(text_color));
         elements.push_back(separator());
         
         // Горизонтальное расположение выбора задачи и разработчика
         Elements task_dev_elements;
         task_dev_elements.push_back(vbox({
-            text("Select Task:"),
+            text("Select Task:") | color(text_color),
             dev_assignment_task_selection->Render()
         }));
         task_dev_elements.push_back(vbox({
-            text("Select Developer:"),
+            text("Select Developer:") | color(text_color),
             dev_assignment_developer_selection->Render()
         }));
         
@@ -1029,8 +1066,10 @@ void ScrumBoardUI::run() {
 
     // Рендерер для главного интерфейса
     auto main_renderer = Renderer(main_component, [&] {
+        auto text_color = get_text_color();
+        
         return vbox({
-            text("SCRUM Board") | bold | hcenter,
+            text("SCRUM Board") | bold | hcenter | color(text_color),
             separator(),
             tab_selection->Render(),
             tab_container->Render() | flex,

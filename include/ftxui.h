@@ -47,7 +47,7 @@ private:
     std::string developer_name;       // Введенное имя разработчика
     std::string file_path_input_str;  // Введенный путь к файлу
     
-    // Индексы выбранных элементов в списках
+    // Индексы выбранных элементов в спискаов
     int selected_column = 0;          // Индекс выбранной колонки
     int selected_source_column = 0;   // Индекс исходной колонки для перемещения
     int selected_destination_column = 1; // Индекс целевой колонки для перемещения
@@ -108,6 +108,14 @@ private:
     // new_file_name - имя нового файла (для сохранения)
     // selected_file - индекс выбранного файла (для загрузки)
     void handle_save_load_dialog(bool is_save, const std::string& new_file_name, int selected_file);
+
+    // Методы для адаптивной цветовой схемы
+    ftxui::Color get_text_color() const { return ftxui::Color::Default; }
+    
+    // Метод для создания стилизованных компонентов ввода
+    ftxui::Component create_styled_input(std::string* content, const std::string& placeholder);
+
+    ftxui::Component create_adaptive_button(const std::string& label, std::function<void()> on_click);
 
 public:
     ScrumBoardUI();  // Конструктор - инициализирует UI и данные

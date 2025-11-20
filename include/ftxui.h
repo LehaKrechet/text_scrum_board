@@ -9,66 +9,107 @@
 
 // Класс ScrumBoardUI реализует пользовательский интерфейс
 // для управления Scrum доской с использованием библиотеки FTXUI
+// FTXUI - это кроссплатформенная библиотека для создания терминальных UI
 class ScrumBoardUI {
 private:
     // Основные данные приложения
-    std::shared_ptr<Board> board;           // Умный указатель на доску
-    std::shared_ptr<Json_worker> json_worker; // Умный указатель на JSON worker
-    std::string save_path = "../boards/board.json";  // Путь по умолчанию для сохранения
     
-    // Компоненты UI (поля ввода, выбора и т.д.)
-    ftxui::Component task_title_input;
-    ftxui::Component task_description_input;
-    ftxui::Component task_priority_input;
-    ftxui::Component developer_name_input;
-    ftxui::Component column_selection;
-    ftxui::Component source_column_selection;
-    ftxui::Component destination_column_selection;
-    ftxui::Component task_selection;
-    ftxui::Component developer_selection;
-    ftxui::Component file_path_input;
-    ftxui::Component file_list_selection;
+    // Умный указатель на доску
+    // shared_ptr позволяет нескольким компонентам владеть одной доской
+    std::shared_ptr<Board> board;
     
-    // Переменные состояния UI
-    std::string task_title;
-    std::string task_description;
-    std::string task_priority_str;
-    std::string developer_name;
-    std::string file_path_input_str;
-    int selected_column = 0;
-    int selected_source_column = 0;
-    int selected_destination_column = 1;
-    int selected_task = 0;
-    int selected_developer = 0;
-    int selected_file = 0;
-    int current_tab = 0;
-    int previous_component = 0;
+    // Умный указатель на JSON worker для сохранения/загрузки
+    std::shared_ptr<Json_worker> json_worker;
     
-    // Контейнеры данных для UI
-    std::vector<std::string> column_names;
-    std::vector<std::string> task_titles;
-    std::vector<std::string> developer_names;
-    std::vector<std::string> json_files;
+    // Путь по умолчанию для сохранения досок
+    std::string save_path = "../boards/board.json";
+    
+    // Компоненты UI FTXUI
+    // Каждый Component представляет интерактивный элемент интерфейса
+    
+    ftxui::Component task_title_input;           // Поле ввода заголовка задачи
+    ftxui::Component task_description_input;     // Поле ввода описания задачи
+    ftxui::Component task_priority_input;        // Поле ввода приоритета задачи
+    ftxui::Component developer_name_input;       // Поле ввода имени разработчика
+    ftxui::Component column_selection;           // Выбор колонки для новой задачи
+    ftxui::Component source_column_selection;    // Выбор исходной колонки для перемещения
+    ftxui::Component destination_column_selection; // Выбор целевой колонки для перемещения
+    ftxui::Component task_selection;             // Выбор задачи из списка
+    ftxui::Component developer_selection;        // Выбор разработчика из списка
+    ftxui::Component file_path_input;            // Поле ввода пути к файлу
+    ftxui::Component file_list_selection;        // Выбор файла из списка
+    
+    // Переменные состояния UI - хранят текущие значения элементов управления
+    
+    std::string task_title;           // Введенный заголовок задачи
+    std::string task_description;     // Введенное описание задачи
+    std::string task_priority_str;    // Введенный приоритет (как строка)
+    std::string developer_name;       // Введенное имя разработчика
+    std::string file_path_input_str;  // Введенный путь к файлу
+    
+    // Индексы выбранных элементов в списках
+    int selected_column = 0;          // Индекс выбранной колонки
+    int selected_source_column = 0;   // Индекс исходной колонки для перемещения
+    int selected_destination_column = 1; // Индекс целевой колонки для перемещения
+    int selected_task = 0;            // Индекс выбранной задачи
+    int selected_developer = 0;       // Индекс выбранного разработчика
+    int selected_file = 0;            // Индекс выбранного файла
+    
+    int current_tab = 0;              // Текущая активная вкладка
+    int previous_component = 0;       // Предыдущее состояние UI (для навигации назад)
+    
+    // Контейнеры данных для отображения в UI
+    
+    std::vector<std::string> column_names;    // Названия колонок для выбора
+    std::vector<std::string> task_titles;     // Форматированные названия задач
+    std::vector<std::string> developer_names; // Имена разработчиков
+    std::vector<std::string> json_files;      // Список JSON файлов в директории
 
-    // Приватные методы для внутренней логики UI
-    void initialize_board();      // Инициализация доски
-    void update_task_list();      // Обновление списка задач
-    void update_developer_list(); // Обновление списка разработчиков
-    void update_file_list();      // Обновление списка файлов
-    void setup_ui_components();   // Настройка компонентов UI
-    void refresh_ui_data();       // Обновление всех данных UI
-    ftxui::Element render_board(); // Отрисовка доски
+    // Методы для внутренней логики UI
     
-    // Обработчики событий
-    void handle_create_task();     // Создание задачи
-    void handle_move_task();       // Перемещение задачи
+    // Инициализация доски начальными данными
+    // Создает стандартные колонки если их нет
+    void initialize_board();
+    
+    // Обновление списка задач для отображения
+    // Собирает все задачи со всех колонок и форматирует их
+    void update_task_list();
+    
+    // Обновление списка разработчиков
+    void update_developer_list();
+    
+    // Обновление списка файлов в текущей директории
+    // Ищет все JSON файлы для загрузки/сохранения
+    void update_file_list();
+    
+    // Настройка и создание компонентов UI
+    // Инициализирует все элементы управления FTXUI
+    void setup_ui_components();
+    
+    // Обновление всех данных UI
+    // Вызывает все отдельные методы обновления
+    void refresh_ui_data();
+    
+    // Отрисовка визуального представления доски
+    // Создает графическое отображение колонок и задач
+    ftxui::Element render_board();
+    
+    // Обработчики событий - вызываются при взаимодействии пользователя
+    
+    void handle_create_task();     // Создание новой задачи
+    void handle_move_task();       // Перемещение задачи между колонками
     void handle_delete_task();     // Удаление задачи
-    void handle_add_developer();   // Добавление разработчика
+    void handle_add_developer();   // Добавление нового разработчика
     void handle_delete_developer(); // Удаление разработчика
-    void handle_assign_developer(); // Назначение разработчика
-    void handle_save_load_dialog(bool is_save, const std::string& new_file_name, int selected_file); // Диалог сохранения/загрузки
+    void handle_assign_developer(); // Назначение разработчика на задачу
+    
+    // Диалог сохранения/загрузки доски
+    // is_save - true для сохранения, false для загрузки
+    // new_file_name - имя нового файла (для сохранения)
+    // selected_file - индекс выбранного файла (для загрузки)
+    void handle_save_load_dialog(bool is_save, const std::string& new_file_name, int selected_file);
 
 public:
-    ScrumBoardUI();  // Конструктор
+    ScrumBoardUI();  // Конструктор - инициализирует UI и данные
     void run();      // Основной метод запуска приложения
 };

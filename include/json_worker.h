@@ -14,6 +14,7 @@ class Board;
 
 // Класс Json_worker отвечает за сериализацию и десериализацию
 // состояния Scrum доски в формат JSON
+// Использует библиотеку RapidJSON для эффективной работы с JSON
 class Json_worker {
 private:
     Document doc;                              // DOM-представление JSON документа
@@ -28,6 +29,7 @@ public:
     }
     
     // Основные методы работы с JSON
+    
     void save();                                      // Сохранение документа в файл
     void set_save_path(const std::string& path) { save_path = path; }  // Установка пути
     std::string get_save_path() const { return save_path; }            // Получение пути

@@ -4,24 +4,32 @@
 #include <algorithm>
 #include <stdexcept>
 
-// Инициализация списка использованных ID
+// used_ids будет общим для всех экземпляров Task
 std::vector<std::string> Task::used_ids = {};
 
 // Генерация случайной строки заданной длины
 // Используется для создания уникальных идентификаторов задач
 std::string Task::generate_random_string(int length) {
-    // Набор символов для генерации ID (цифры и буквы в обоих регистрах)
+    // Набор символов для генерации ID
+    // Используем цифры и буквы в обоих регистрах для большего разнообразия
+    // Исключаем похожие символы типа 0/O, 1/I для избежания путаницы
     const std::string charset = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
     
     // Инициализация генератора случайных чисел
-    std::random_device rd;  // Источник энтропии
-    std::mt19937 generator(rd());  // Вихрь Мерсенна как генератор
-    std::uniform_int_distribution<int> distribution(0, charset.size() - 1);  // Равномерное распределение
+    // std::random_device - источник энтропии (аппаратный генератор если доступен)
+    std::random_device rd;
+    // std::mt19937 - вихрь Мерсенна, качественный псевдослучайный генератор
+    std::mt19937 generator(rd());
+    // Равномерное распределение для индексов в charset
+    // От 0 до размера charset - 1
+    std::uniform_int_distribution<int> distribution(0, charset.size() - 1);
     
     // Генерация строки заданной длины
     std::string result;
     for (int i = 0; i < length; ++i) {
-        result += charset[distribution(generator)];  // Добавление случайного символа
+        // Добавление случайного символа из charset
+        // distribution(generator) генерирует случайный индекс
+        result += charset[distribution(generator)];
     }
     return result;
 }
@@ -30,19 +38,26 @@ std::string Task::generate_random_string(int length) {
 std::string Task::generate_id() {
     std::string new_id;
     bool unique_found = false;
-    const int max_attempts = 100;  // Максимальное количество попыток генерации
+    // Максимальное количество попыток генерации
+    // Защита от бесконечного цикла если что-то пошло не так
+    const int max_attempts = 100;
     int attempts = 0;
     
     // Попытка найти уникальный ID
+    // Продолжаем пока не найдем уникальный или не превысим максимальное число попыток
     while (!unique_found && attempts < max_attempts) {
-        new_id = generate_random_string(6);  // Генерация ID длиной 6 символов
+        // Генерация ID длиной 6 символов
+        // 6 символов - компромисс между уникальностью и читаемостью
+        new_id = generate_random_string(6);
         
-        // Проверка уникальности ID
+        // Проверка уникальности ID в глобальном списке использованных
+        // std::find ищет new_id в векторе used_ids
         if (std::find(used_ids.begin(), used_ids.end(), new_id) == used_ids.end()) {
-            used_ids.push_back(new_id);  // Добавление в список использованных
-            unique_found = true;         // Уникальный ID найден
+            // Если ID уникален, добавляем в список использованных
+            used_ids.push_back(new_id);
+            unique_found = true;  // Уникальный ID найден, выходим из цикла
         }
-        attempts++;
+        attempts++;  // Увеличиваем счетчик попыток
     }
     
     // Если не удалось сгенерировать уникальный ID за максимальное число попыток
@@ -62,11 +77,11 @@ void Task::clear_used_ids() {
 // Конструктор задачи
 // Создает задачу с обязательным заголовком и автоматически генерирует ID
 Task::Task(std::string titl) : 
-    title(titl), 
-    id(generate_id()),      // Автоматическая генерация уникального ID
-    description(""),        // Пустое описание по умолчанию
-    priority(0),            // Приоритет 0 по умолчанию
-    developer(nullptr) {}   // Разработчик не назначен по умолчанию
+    title(titl),                    // Инициализация заголовка
+    id(generate_id()),              // Автоматическая генерация уникального ID
+    description(""),                // Пустое описание по умолчанию
+    priority(-1),                    // Приоритет 0 по умолчанию
+    developer(nullptr) {}           // Разработчик не назначен по умолчанию
 
 // Установка описания задачи
 void Task::set_description(std::string descript) {
@@ -100,6 +115,7 @@ int Task::get_priority() const {
 
 // Установка приоритета задачи с валидацией
 void Task::set_priority(int p) {
+    // Проверяем что приоритет в допустимом диапазоне
     if (p < 0 || p > 10) {
         throw std::invalid_argument("Priority must be between 0 and 10");
     }
@@ -118,6 +134,7 @@ Developer* Task::get_developer() const {
 
 // Установка ID задачи вручную (с валидацией)
 void Task::set_id(std::string new_id) {
+    // Проверяем что ID не пустой
     if (new_id.empty()) {
         throw std::invalid_argument("Task ID cannot be empty");
     }

@@ -115,8 +115,6 @@ private:
     // Метод для создания стилизованных компонентов ввода
     ftxui::Component create_styled_input(std::string* content, const std::string& placeholder);
 
-    ftxui::Component create_adaptive_button(const std::string& label, std::function<void()> on_click);
-
 public:
     ScrumBoardUI();  // Конструктор - инициализирует UI и данные
     void run();      // Основной метод запуска приложения

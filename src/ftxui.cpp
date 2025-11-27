@@ -586,7 +586,7 @@ Element ScrumBoardUI::render_board() {
                 const auto& task = tasks[i];
                 
                 // Получение имени разработчика
-                std::string developer_name = "Unassigned";
+                std::string developer_name = "";
                 if (task->get_developer()) {
                     developer_name = task->get_developer()->get_name();
                 }
@@ -634,7 +634,6 @@ Element ScrumBoardUI::render_board() {
             | border        // Рамка вокруг колонки
             | flex          // Растягивается по вертикали
             | frame         // Обрамление
-            | vscroll_indicator // Индикатор прокрутки если контент не помещается
         );
     }
     

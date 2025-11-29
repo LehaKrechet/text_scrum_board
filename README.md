@@ -46,15 +46,17 @@ mkdir build && cd build
 
 # Конфигурация проекта
 cmake ..
-# Для Windows
-cmake --build . --config Release
 # Сборка
 make
-
 # Запуск приложения
 ./text_scrum-board
-#Для windows
-/Release/text_scrum_board.exe
+
+# Для Windows
+cmake ..
+cmake --build . --config Release
+.\Release\text_scrum_board.exe
+
+
 ```
 
 ### Установка зависимостей
@@ -63,7 +65,7 @@ make
 ```bash
 sudo apt update
 
-sudo apt install cmake 
+sudo apt install cmake make
 ```
 
 ## 🎮 Использование

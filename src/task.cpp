@@ -6,6 +6,9 @@
 #include <stdexcept>
 
 
+#define MIN_PRIORITY 0
+#define MAX_PRIORITY 10
+
 // Генерация случайной строки заданной длины
 // Используется для создания уникальных идентификаторов задач
 std::string Task::generate_random_string(int length) {
@@ -41,7 +44,7 @@ std::string Task::generate_random_string(int length) {
 Task::Task(std::string titl, Board& board) : 
     title(titl),
     description(""),
-    priority(0),
+    priority(MIN_PRIORITY),
     developer(nullptr) {
     
     // Генерация уникального ID с использованием Board
@@ -99,8 +102,9 @@ int Task::get_priority() const {
 
 // Установка приоритета задачи с валидацией
 void Task::set_priority(int p) {
+    
     // Проверяем что приоритет в допустимом диапазоне
-    if (p < 0 || p > 10) {
+    if (p < MIN_PRIORITY || p > MAX_PRIORITY) {
         throw std::invalid_argument("Priority must be between 0 and 10");
     }
     priority = p;

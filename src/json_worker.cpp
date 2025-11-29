@@ -204,7 +204,7 @@ void Json_worker::board_load(Board& board) {
     // Это важно чтобы не смешивать старое и новое состояние
     board.clear_columns();
     board.clear_developers();
-    Task::clear_used_ids();  // Очищаем статические ID задач
+    Board::clear_used_ids(); 
     ids.clear();  // Очищаем локальный кэш ID
     
     // Загрузка разработчиков из JSON массива
@@ -264,7 +264,7 @@ void Json_worker::board_load(Board& board) {
                 const Value& task_data = task_itr->value;
                 
                 // Создаем задачу с полученным заголовком
-                auto task = std::make_unique<Task>(task_title);
+                auto task = std::make_unique<Task>(task_title, board);
                 
                 // Загрузка полей задачи из JSON
                 if (task_data.HasMember("description") && task_data["description"].IsString()) {

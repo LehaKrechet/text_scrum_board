@@ -2,20 +2,23 @@
 #include <memory>
 #include "task.h"
 #include "developer.h"
+#include "board.h"  // Добавляем включение board.h
 
 // Test fixture для тестирования класса Task
 class TaskTest : public ::testing::Test {
 protected:
     void SetUp() override {
         // Очистка статических ID перед каждым тестом для изоляции
-        Task::clear_used_ids();
+        Board::clear_used_ids();  // ЗАМЕНА: вместо Task::clear_used_ids()
         
-        // Создание тестовой задачи и разработчика
-        task = std::make_unique<Task>("Test Task");
+        // Создание тестовой доски, задачи и разработчика
+        board = std::make_unique<Board>("Test Board");  // ДОБАВЛЯЕМ доску
+        task = std::make_unique<Task>("Test Task", *board);  // ИЗМЕНЕНИЕ: передаем board в конструктор
         developer = std::make_unique<Developer>("Test Developer");
     }
 
     // Общие ресурсы для тестов Task
+    std::unique_ptr<Board> board;  // ДОБАВЛЯЕМ
     std::unique_ptr<Task> task;
     std::unique_ptr<Developer> developer;
 };
@@ -26,7 +29,7 @@ TEST_F(TaskTest, ConstructorAndGetters) {
     EXPECT_EQ(task->get_title(), "Test Task");        // Заголовок установлен
     EXPECT_FALSE(task->get_id().empty());             // ID не пустой
     EXPECT_EQ(task->get_description(), "");           // Описание пустое по умолчанию
-    EXPECT_EQ(task->get_priority(), 0);               // Приоритет 0 по умолчанию
+    EXPECT_EQ(task->get_priority(), -1);              // ИЗМЕНЕНИЕ: приоритет -1 по умолчанию
     EXPECT_EQ(task->get_developer(), nullptr);        // Разработчик не назначен
 }
 
@@ -89,9 +92,9 @@ TEST_F(TaskTest, SetId) {
 // Тест генерации уникальных ID
 TEST_F(TaskTest, UniqueIdGeneration) {
     // Создание нескольких задач для проверки уникальности ID
-    auto task1 = std::make_unique<Task>("Task 1");
-    auto task2 = std::make_unique<Task>("Task 2");
-    auto task3 = std::make_unique<Task>("Task 3");
+    auto task1 = std::make_unique<Task>("Task 1", *board);  // ИЗМЕНЕНИЕ: передаем board
+    auto task2 = std::make_unique<Task>("Task 2", *board);  // ИЗМЕНЕНИЕ: передаем board
+    auto task3 = std::make_unique<Task>("Task 3", *board);  // ИЗМЕНЕНИЕ: передаем board
     
     // Получение сгенерированных ID
     std::string id1 = task1->get_id();
@@ -116,15 +119,15 @@ TEST_F(TaskTest, UniqueIdGeneration) {
 
 // Тест оператора сравнения задач
 TEST_F(TaskTest, TaskEquality) {
-    auto task1 = std::make_unique<Task>("Same Task");
-    auto task2 = std::make_unique<Task>("Same Task");
+    auto task1 = std::make_unique<Task>("Same Task", *board);    // ИЗМЕНЕНИЕ: передаем board
+    auto task2 = std::make_unique<Task>("Same Task", *board);    // ИЗМЕНЕНИЕ: передаем board
     
     // Задачи с одинаковыми заголовками но разными ID не должны быть равны
     // Оператор == сравнивает title, description и id
     EXPECT_FALSE(*task1 == *task2);
     
     // Создание задачи с таким же ID но другим заголовком
-    auto task3 = std::make_unique<Task>("Different Task");
+    auto task3 = std::make_unique<Task>("Different Task", *board);  // ИЗМЕНЕНИЕ: передаем board
     task3->set_id(task1->get_id());
     task3->set_description(task1->get_description());
     task3->set_priority(task1->get_priority());

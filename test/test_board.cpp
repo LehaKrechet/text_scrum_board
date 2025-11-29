@@ -3,6 +3,7 @@
 #include "board.h"
 #include "column.h"
 #include "developer.h"
+#include "task.h"  // Добавляем для тестирования ID
 
 //Тест для тестирования класса Board
 class BoardTest : public ::testing::Test {
@@ -10,6 +11,8 @@ protected:
     void SetUp() override {
         // Создание тестовой доски перед каждым тестом
         board = std::make_unique<Board>("Test Board");
+        // Очистка статических ID перед каждым тестом
+        Board::clear_used_ids();
     }
 
     std::unique_ptr<Board> board;
@@ -138,6 +141,36 @@ TEST_F(BoardTest, FindDeveloper) {
     EXPECT_EQ(found_dev1, dev1_ptr);    // Найденный разработчик соответствует ожидаемому
     EXPECT_EQ(found_dev2, dev2_ptr);    // Найденный разработчик соответствует ожидаемому
     EXPECT_EQ(not_found, nullptr);      // Несуществующий разработчик не найден
+}
+
+// НОВЫЕ ТЕСТЫ: тестирование статических методов управления ID
+TEST_F(BoardTest, StaticIdManagement) {
+    // Тест добавления и проверки ID
+    Board::add_used_id("test_id_1");
+    Board::add_used_id("test_id_2");
+    
+    EXPECT_TRUE(Board::is_id_used("test_id_1"));
+    EXPECT_TRUE(Board::is_id_used("test_id_2"));
+    EXPECT_FALSE(Board::is_id_used("non_existent_id"));
+    
+    // Тест очистки ID
+    Board::clear_used_ids();
+    EXPECT_FALSE(Board::is_id_used("test_id_1"));
+    EXPECT_FALSE(Board::is_id_used("test_id_2"));
+}
+
+// Тест интеграции Task с Board для генерации ID
+TEST_F(BoardTest, TaskIdGenerationIntegration) {
+    // Создание задач с использованием Board
+    auto task1 = std::make_unique<Task>("Task 1", *board);
+    auto task2 = std::make_unique<Task>("Task 2", *board);
+    
+    // Проверка что ID уникальны
+    EXPECT_NE(task1->get_id(), task2->get_id());
+    
+    // Проверка что ID добавлены в used_ids
+    EXPECT_TRUE(Board::is_id_used(task1->get_id()));
+    EXPECT_TRUE(Board::is_id_used(task2->get_id()));
 }
 
 // Комплексный тест множественных операций с доской

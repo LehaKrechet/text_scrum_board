@@ -22,7 +22,7 @@ private:
     std::shared_ptr<Json_worker> json_worker;
     
     // Путь по умолчанию для сохранения досок
-    std::string save_path = "../boards/board.json";
+    std::string save_path = "/";
     
     // Компоненты UI FTXUI
     // Каждый Component представляет интерактивный элемент интерфейса

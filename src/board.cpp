@@ -99,3 +99,20 @@ Column* Board::find_column(const std::string& name) const {
     // Если не найдена, возвращаем nullptr
     return it != columns.end() ? it->get() : nullptr;
 }
+
+std::vector<std::string> Board::used_ids = {};
+
+// Добавление ID в список использованных
+void Board::add_used_id(const std::string& id) {
+    used_ids.push_back(id);
+}
+
+// Проверка, используется ли ID
+bool Board::is_id_used(const std::string& id) {
+    return std::find(used_ids.begin(), used_ids.end(), id) != used_ids.end();
+}
+
+// Очистка списка использованных ID
+void Board::clear_used_ids() {
+    used_ids.clear();
+}

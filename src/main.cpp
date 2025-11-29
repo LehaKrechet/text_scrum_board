@@ -1,4 +1,4 @@
-#include <ftxui.h>
+#include <scrumboardui.h>
 #include <iostream>
 
 int main() {

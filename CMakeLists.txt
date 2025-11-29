@@ -50,7 +50,7 @@ add_executable(text_scrum_board
     src/developer.cpp 
     src/json_worker.cpp 
     src/manager.cpp 
-    src/ftxui.cpp
+    src/scrumboardui.cpp
 )
 
 add_executable(scrum_board_tests

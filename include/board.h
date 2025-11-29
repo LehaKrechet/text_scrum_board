@@ -17,6 +17,7 @@ private:
     std::string name;  // Название доски
     std::vector<std::unique_ptr<Column>> columns;      // Список колонок на доске
     std::vector<std::unique_ptr<Developer>> developers; // Список разработчиков команды
+    static std::vector<std::string> used_ids;
 
 public:
     // Конструктор доски с обязательным названием
@@ -42,4 +43,9 @@ public:
     // Методы поиска
     Developer* find_developer(const std::string& name) const;  // Поиск разработчика по имени
     Column* find_column(const std::string& name) const;        // Поиск колонки по имени
+
+    static void add_used_id(const std::string& id);
+    static bool is_id_used(const std::string& id);
+    static void clear_used_ids();
+    
 };

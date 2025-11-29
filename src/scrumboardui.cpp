@@ -1,4 +1,4 @@
-#include "ftxui.h"
+#include "scrumboardui.h"
 #include "manager.h"
 #include <iostream>
 #include <algorithm>
@@ -603,7 +603,7 @@ Element ScrumBoardUI::render_board() {
                 }
                 
                 // УРОВЕНЬ 2+: Приоритет
-                if (detail_level >= 2 && task->get_priority() != -1) {
+                if (detail_level >= 2 && task->get_priority() != 0) {
                     task_content.push_back(text("🎯 " + std::to_string(task->get_priority())) | center | color(text_color));
                 }
                 

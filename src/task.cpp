@@ -1,11 +1,10 @@
 #include "task.h"
+#include "board.h"
 #include <string>
 #include <random>
 #include <algorithm>
 #include <stdexcept>
 
-// used_ids будет общим для всех экземпляров Task
-std::vector<std::string> Task::used_ids = {};
 
 // Генерация случайной строки заданной длины
 // Используется для создания уникальных идентификаторов задач
@@ -34,55 +33,40 @@ std::string Task::generate_random_string(int length) {
     return result;
 }
 
-// Генерация уникального ID для задачи
-std::string Task::generate_id() {
+
+
+
+// Конструктор задачи
+// Создает задачу с обязательным заголовком и автоматически генерирует ID
+Task::Task(std::string titl, Board& board) : 
+    title(titl),
+    description(""),
+    priority(0),
+    developer(nullptr) {
+    
+    // Генерация уникального ID с использованием Board
     std::string new_id;
     bool unique_found = false;
-    // Максимальное количество попыток генерации
-    // Защита от бесконечного цикла если что-то пошло не так
     const int max_attempts = 100;
     int attempts = 0;
     
-    // Попытка найти уникальный ID
-    // Продолжаем пока не найдем уникальный или не превысим максимальное число попыток
     while (!unique_found && attempts < max_attempts) {
-        // Генерация ID длиной 6 символов
-        // 6 символов - компромисс между уникальностью и читаемостью
         new_id = generate_random_string(6);
         
-        // Проверка уникальности ID в глобальном списке использованных
-        // std::find ищет new_id в векторе used_ids
-        if (std::find(used_ids.begin(), used_ids.end(), new_id) == used_ids.end()) {
-            // Если ID уникален, добавляем в список использованных
-            used_ids.push_back(new_id);
-            unique_found = true;  // Уникальный ID найден, выходим из цикла
+        // Используем Board для проверки уникальности
+        if (!Board::is_id_used(new_id)) {
+            Board::add_used_id(new_id);
+            unique_found = true;
         }
-        attempts++;  // Увеличиваем счетчик попыток
+        attempts++;
     }
     
-    // Если не удалось сгенерировать уникальный ID за максимальное число попыток
     if (!unique_found) {
         throw std::runtime_error("Failed to generate unique task ID");
     }
     
-    return new_id;
+    id = new_id;
 }
-
-// Очистка списка использованных ID
-// Полезно при загрузке новой доски или сбросе состояния
-void Task::clear_used_ids() {
-    used_ids.clear();
-}
-
-// Конструктор задачи
-// Создает задачу с обязательным заголовком и автоматически генерирует ID
-Task::Task(std::string titl) : 
-    title(titl),                    // Инициализация заголовка
-    id(generate_id()),              // Автоматическая генерация уникального ID
-    description(""),                // Пустое описание по умолчанию
-    priority(-1),                    // Приоритет 0 по умолчанию
-    developer(nullptr) {}           // Разработчик не назначен по умолчанию
-
 // Установка описания задачи
 void Task::set_description(std::string descript) {
     description = descript;

@@ -14,6 +14,9 @@ protected:
         board->add_column(std::make_unique<Column>("Backlog"));
         board->add_column(std::make_unique<Column>("In Progress"));
         board->add_column(std::make_unique<Column>("Done"));
+        
+        // Очистка статических ID
+        Board::clear_used_ids();  // ДОБАВЛЯЕМ
     }
 
     std::unique_ptr<Board> board;

@@ -11,6 +11,8 @@ protected:
         // Создание тестовой колонки и доски
         column = std::make_unique<Column>("Test Column");
         board = std::make_unique<Board>("Test Board");
+        // Очистка статических ID
+        Board::clear_used_ids();  // ДОБАВЛЯЕМ
     }
 
     std::unique_ptr<Column> column;
@@ -32,8 +34,8 @@ TEST_F(ColumnTest, SetName) {
 // Тест добавления и получения задач из колонки
 TEST_F(ColumnTest, AddAndGetTasks) {
     // Создание тестовых задач
-    auto task1 = std::make_unique<Task>("Task 1");
-    auto task2 = std::make_unique<Task>("Task 2");
+    auto task1 = std::make_unique<Task>("Task 1", *board);  // ИЗМЕНЕНИЕ: передаем board
+    auto task2 = std::make_unique<Task>("Task 2", *board);  // ИЗМЕНЕНИЕ: передаем board
     
     // Сохранение указателей для последующей проверки
     Task* task1_ptr = task1.get();
@@ -57,8 +59,8 @@ TEST_F(ColumnTest, AddAndGetTasks) {
 // Тест удаления задач из колонки
 TEST_F(ColumnTest, DeleteTask) {
     // Добавление тестовых задач
-    auto task1 = std::make_unique<Task>("Task 1");
-    auto task2 = std::make_unique<Task>("Task 2");
+    auto task1 = std::make_unique<Task>("Task 1", *board);  // ИЗМЕНЕНИЕ: передаем board
+    auto task2 = std::make_unique<Task>("Task 2", *board);  // ИЗМЕНЕНИЕ: передаем board
     
     column->add_task(std::move(task1));
     column->add_task(std::move(task2));
@@ -77,8 +79,8 @@ TEST_F(ColumnTest, DeleteTask) {
 // Тест поиска задач в колонке
 TEST_F(ColumnTest, FindTask) {
     // Создание и добавление задач
-    auto task1 = std::make_unique<Task>("Task 1");
-    auto task2 = std::make_unique<Task>("Task 2");
+    auto task1 = std::make_unique<Task>("Task 1", *board);  // ИЗМЕНЕНИЕ: передаем board
+    auto task2 = std::make_unique<Task>("Task 2", *board);  // ИЗМЕНЕНИЕ: передаем board
     
     Task* task1_ptr = task1.get();
     Task* task2_ptr = task2.get();
@@ -106,7 +108,7 @@ TEST_F(ColumnTest, MoveTaskBetweenColumns) {
     auto end_column = std::make_unique<Column>("End");
     
     // Создание задачи для перемещения
-    auto task = std::make_unique<Task>("Movable Task");
+    auto task = std::make_unique<Task>("Movable Task", *board);  // ИЗМЕНЕНИЕ: передаем board
     Task* task_ptr = task.get();
     
     // Добавление задачи в исходную колонку
@@ -133,8 +135,8 @@ TEST_F(ColumnTest, SearchTaskInBoard) {
     
     // Добавление задач в колонки
     auto& columns = board->get_columns();
-    columns[0]->add_task(std::make_unique<Task>("Task in Backlog"));
-    columns[1]->add_task(std::make_unique<Task>("Task in Done"));
+    columns[0]->add_task(std::make_unique<Task>("Task in Backlog", *board));  // ИЗМЕНЕНИЕ
+    columns[1]->add_task(std::make_unique<Task>("Task in Done", *board));     // ИЗМЕНЕНИЕ
     
     // Поиск задач в разных колонках
     ::Task* found_task1 = search_task(*board, "Backlog", "Task in Backlog");
